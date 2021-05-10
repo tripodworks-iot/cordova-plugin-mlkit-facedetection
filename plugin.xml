@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-mlkit-facedetection" version="0.0.1"
+  xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <name>cordova-plugin-mlkit-facedetection</name>
+
+  <description>face Detection</description>
+
+  <engines>
+      <engine name="cordova" version=">=9.0.0"/>
+  </engines>
+
+  <js-module name="faceDetection" src="www/faceDetection.js">
+      <clobbers target="faceDetection" />
+  </js-module>
+
+  <platform name="android">
+    <config-file parent="/*" target="res/xml/config.xml">
+      <feature name="faceDetection">
+        <param name="android-package" value="jp.co.tripodw.iot.facedetection.faceDetection" />
+      </feature>
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-feature android:name="android.hardware.camera"/>
+      <uses-feature android:name="android.hardware.camera.autofocus"/>
+      <uses-permission android:name="android.permission.CAMERA" />
+      <uses-permission android:name="android.permission.RECORD_AUDIO" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    </config-file>
+    <source-file src="src/android/faceDetection.java" target-dir="src/jp/co/tripodw/iot/facedetection/" />
+  </platform>
+
+  <platform name="ios">
+    <config-file parent="/*" target="config.xml">
+      <feature name="faceDetection">
+        <param name="ios-package" value="faceDetection" />
+      </feature>
+    </config-file>
+    <source-file src="src/ios/faceDetection.m" />
+  </platform>
+</plugin>

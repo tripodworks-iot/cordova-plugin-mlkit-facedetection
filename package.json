@@ -1,0 +1,11 @@
+{
+  "name": "cordova-plugin-mlkit-facedetection",
+  "version": "0.0.1",
+  "description": "",
+  "cordova": {
+    "id": "cordova-plugin-mlkit-facedetection",
+    "platforms": [
+      "android"
+    ]
+  }
+}
