@@ -45,17 +45,20 @@ public class faceDetection extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.execCallback = callbackContext;
-        this.execArgs = args.getJSONObject(0);
-
         if (action.equals("start")) {
             Log.d(TAG, "execute start");
+            this.execArgs = args.getJSONObject(0);
             if(this.checkPermissions()) {
                 this.startCamera(this.execArgs, this.execCallback);
             } else {
                 cordova.requestPermissions(this, CAM_REQ_CODE, permissions);
             }
             return true;
-        }
+        } else if (action.equals("stop")){
+            Log.d(TAG, "execute stop");
+            this.stopCamera(this.execCallback);
+            return true;
+        } else{}
         return false;
     }
 
@@ -84,9 +87,8 @@ public class faceDetection extends CordovaPlugin {
     }
 
     private void startCamera(JSONObject params, CallbackContext callbackContext) {
-
         if (this.fragment != null) {
-            callbackContext.error("Camera already started");
+            this.checkCamera(callbackContext);
             return;
         }
 
@@ -138,6 +140,33 @@ public class faceDetection extends CordovaPlugin {
             fragmentTransaction.add(containerView.getId(), fragment);
             fragmentTransaction.commit();
 
+        });
+    }
+
+    private void checkCamera(CallbackContext callbackContext) {
+        if(fragment.getCameraSource() != null) {
+            callbackContext.error("camera started!");
+            return;
+        }
+        cordova.getActivity().runOnUiThread(() -> {
+            fragment.createCameraSource();
+            fragment.startCameraSource();
+        });
+    }
+
+    private void stopCamera(CallbackContext callbackContext) {
+        if(fragment == null){
+            callbackContext.error("camera no active!");
+            return;
+        }
+
+        if(fragment.getCameraSource() == null) {
+            callbackContext.error("camera stopped!");
+            return;
+        }
+
+        cordova.getActivity().runOnUiThread(() -> {
+            fragment.stopCamera();
         });
     }
 }

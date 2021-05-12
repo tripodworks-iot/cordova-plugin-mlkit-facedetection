@@ -76,6 +76,17 @@ public class LivePreviewActivity extends Fragment {
     this.front = front;
   }
 
+  public void stopCamera(){
+    if (cameraSource != null) {
+      cameraSource.release();
+      cameraSource = null;
+    }
+  }
+
+  public CameraSource getCameraSource(){
+    return cameraSource;
+  }
+
   private void createCameraPreview(){
     if(preview == null) {
       //set box position and size
@@ -92,10 +103,16 @@ public class LivePreviewActivity extends Fragment {
     }
   }
 
-  private void createCameraSource() {
+  public void createCameraSource() {
     // If there's no existing cameraSource, create one.
     if (cameraSource == null) {
       cameraSource = new CameraSource(getActivity(), graphicOverlay);
+    }
+
+    if (front) {
+      cameraSource.setFacing(CameraSource.CAMERA_FACING_FRONT);
+    } else {
+      cameraSource.setFacing(CameraSource.CAMERA_FACING_BACK);
     }
 
     try {
@@ -104,12 +121,6 @@ public class LivePreviewActivity extends Fragment {
             PreferenceUtils.getFaceDetectorOptionsForLivePreview(getActivity());
         cameraSource.setMachineLearningFrameProcessor(
             new FaceDetectorProcessor(getActivity(), faceDetectorOptions));
-
-      if (front) {
-        cameraSource.setFacing(CameraSource.CAMERA_FACING_FRONT);
-      } else {
-        cameraSource.setFacing(CameraSource.CAMERA_FACING_BACK);
-      }
     } catch (RuntimeException e) {
       Log.e(TAG, "Can not create image processor: ", e);
     }
@@ -120,7 +131,7 @@ public class LivePreviewActivity extends Fragment {
    * (e.g., because onResume was called before the camera source was created), this will be called
    * again when the camera source is created.
    */
-  private void startCameraSource() {
+  public void startCameraSource() {
     if (cameraSource != null) {
       try {
         if (preview == null) {
