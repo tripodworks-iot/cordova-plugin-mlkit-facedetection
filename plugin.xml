@@ -21,6 +21,9 @@
         <param name="android-package" value="jp.co.tripodw.iot.facedetection.faceDetection" />
       </feature>
     </config-file>
+
+    <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
+
     <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-feature android:name="android.hardware.camera"/>
       <uses-feature android:name="android.hardware.camera.autofocus"/>
@@ -28,7 +31,27 @@
       <uses-permission android:name="android.permission.RECORD_AUDIO" />
       <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     </config-file>
+
     <source-file src="src/android/faceDetection.java" target-dir="src/jp/co/tripodw/iot/facedetection/" />
+    <source-file src="src/android/LivePreviewActivity.java" target-dir="src/jp/co/tripodw/iot/facedetection/" />
+
+    <source-file src="src/android/preference/PreferenceUtils.java" target-dir="src/jp/co/tripodw/iot/facedetection/preference/" />
+    <source-file src="src/android/facedetector/FaceDetectorProcessor.java" target-dir="src/jp/co/tripodw/iot/facedetection/facedetector/" />
+    <source-file src="src/android/facedetector/FaceGraphic.java" target-dir="src/jp/co/tripodw/iot/facedetection/facedetector/" />
+
+    <source-file src="src/android/common/BitmapUtils.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/CameraImageGraphic.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/CameraSource.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/CameraSourcePreview.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/FrameMetadata.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/GraphicOverlay.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/InferenceInfoGraphic.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/ScopedExecutor.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/VisionImageProcessor.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+    <source-file src="src/android/common/VisionProcessorBase.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+
+    <source-file src="src/android/live_preview_activity.xml" target-dir="res/layout" />
+
   </platform>
 
   <platform name="ios">
