@@ -19,6 +19,7 @@
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="faceDetection">
         <param name="android-package" value="jp.co.tripodw.iot.facedetection.faceDetection" />
+        <param name="onload" value="true" />
       </feature>
     </config-file>
 
@@ -36,6 +37,8 @@
     <source-file src="src/android/LivePreviewActivity.java" target-dir="src/jp/co/tripodw/iot/facedetection/" />
 
     <source-file src="src/android/preference/PreferenceUtils.java" target-dir="src/jp/co/tripodw/iot/facedetection/preference/" />
+    <source-file src="src/android/preference/LivePreviewPreferenceFragment.java" target-dir="src/jp/co/tripodw/iot/facedetection/preference/" />
+
     <source-file src="src/android/facedetector/FaceDetectorProcessor.java" target-dir="src/jp/co/tripodw/iot/facedetection/facedetector/" />
     <source-file src="src/android/facedetector/FaceGraphic.java" target-dir="src/jp/co/tripodw/iot/facedetection/facedetector/" />
 
@@ -51,7 +54,6 @@
     <source-file src="src/android/common/VisionProcessorBase.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
 
     <source-file src="src/android/live_preview_activity.xml" target-dir="res/layout" />
-
   </platform>
 
   <platform name="ios">

@@ -18,111 +18,94 @@ package jp.co.tripodw.iot.facedetection.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.StringRes;
-import androidx.camera.core.CameraSelector;
+
 import com.google.android.gms.common.images.Size;
 import com.google.common.base.Preconditions;
-;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import jp.co.tripodw.iot.facedetection.common.CameraSource;
 import jp.co.tripodw.iot.facedetection.common.CameraSource.SizePair;
 
-
-
-/** Utility class to retrieve shared preferences. */
+/**
+ * Utility class to retrieve shared preferences.
+ */
 public class PreferenceUtils {
-
-  static void saveString(Context context, @StringRes int prefKeyId, @Nullable String value) {
-    PreferenceManager.getDefaultSharedPreferences(context)
-        .edit()
-        .putString(context.getString(prefKeyId), value)
-        .apply();
-  }
-
-  @Nullable
-  public static SizePair getCameraPreviewSizePair(Context context, int cameraId) {
-    Preconditions.checkArgument(
-        cameraId == CameraSource.CAMERA_FACING_BACK
-            || cameraId == CameraSource.CAMERA_FACING_FRONT);
-    String previewSizePrefKey;
-    String pictureSizePrefKey;
-    if (cameraId == CameraSource.CAMERA_FACING_BACK) {
-      previewSizePrefKey = "rcpvs";
-      pictureSizePrefKey = "rcpts";
-    } else {
-      previewSizePrefKey = "fcpvs";
-      pictureSizePrefKey = "fcpts";
+    private static Map<String, Object> cameraParam = new HashMap<>();
+    static {
+        cameraParam.put("enableViewport", true);
+        cameraParam.put("landmarkMode", FaceDetectorOptions.LANDMARK_MODE_NONE);
+        cameraParam.put("contourMode", FaceDetectorOptions.CONTOUR_MODE_ALL);
+        cameraParam.put("classificationMode", FaceDetectorOptions.CLASSIFICATION_MODE_NONE);
+        cameraParam.put("performanceMode", FaceDetectorOptions.PERFORMANCE_MODE_FAST);
+        cameraParam.put("faceTrackMode", false);
+        cameraParam.put("minFaceSize", 0.1f);
     }
 
-    try {
-      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-      return new SizePair(
-          Size.parseSize(sharedPreferences.getString(previewSizePrefKey, null)),
-          Size.parseSize(sharedPreferences.getString(pictureSizePrefKey, null)));
-    } catch (Exception e) {
-      return null;
+    public static void saveParam(@Nullable String prefKeyId, Object value) {
+        cameraParam.put(prefKeyId, value);
     }
-  }
 
-  @RequiresApi(VERSION_CODES.LOLLIPOP)
-  @Nullable
-  public static android.util.Size getCameraXTargetResolution(Context context, int lensfacing) {
-    Preconditions.checkArgument(
-        lensfacing == CameraSelector.LENS_FACING_BACK
-            || lensfacing == CameraSelector.LENS_FACING_FRONT);
-    String prefKey =
-        lensfacing == CameraSelector.LENS_FACING_BACK
-            ? "crctas"
-            : "cfctas";
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    try {
-      return android.util.Size.parseSize(sharedPreferences.getString(prefKey, null));
-    } catch (Exception e) {
-      return null;
+    @Nullable
+    public static SizePair getCameraPreviewSizePair(Context context, int cameraId) {
+        Preconditions.checkArgument(
+                cameraId == CameraSource.CAMERA_FACING_BACK
+                        || cameraId == CameraSource.CAMERA_FACING_FRONT);
+        String previewSizePrefKey;
+        String pictureSizePrefKey;
+        if (cameraId == CameraSource.CAMERA_FACING_BACK) {
+            previewSizePrefKey = "rcpvs";
+            pictureSizePrefKey = "rcpts";
+        } else {
+            previewSizePrefKey = "fcpvs";
+            pictureSizePrefKey = "fcpts";
+        }
+
+        try {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            return new SizePair(
+                    Size.parseSize(sharedPreferences.getString(previewSizePrefKey, null)),
+                    Size.parseSize(sharedPreferences.getString(pictureSizePrefKey, null)));
+        } catch (Exception e) {
+            return null;
+        }
     }
-  }
 
-  public static FaceDetectorOptions getFaceDetectorOptionsForLivePreview(Context context) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static FaceDetectorOptions getFaceDetectorOptionsForLivePreview() {
 
-    int landmarkMode = sharedPreferences.getInt("lpfdlm", FaceDetectorOptions.LANDMARK_MODE_NONE);
+        int landmarkMode = (Integer) cameraParam.get("landmarkMode");
 
-    int contourMode = sharedPreferences.getInt("lpfdcm", FaceDetectorOptions.CONTOUR_MODE_ALL);
+        int contourMode = (Integer) cameraParam.get("contourMode");
 
-    int classificationMode = sharedPreferences.getInt("lpfdcfm", FaceDetectorOptions.CLASSIFICATION_MODE_NONE);
+        int classificationMode = (Integer) cameraParam.get("classificationMode");
 
-    int performanceMode = sharedPreferences.getInt("lpfdpm", FaceDetectorOptions.PERFORMANCE_MODE_FAST);
+        int performanceMode = (Integer) cameraParam.get("performanceMode");
 
-    boolean enableFaceTracking =
-        sharedPreferences.getBoolean("lpfdft", false);
-    float minFaceSize =
-        Float.parseFloat(
-            sharedPreferences.getString(
-                "lpfdmfs",
-                "0.1"));
+        boolean enableFaceTracking = (Boolean) cameraParam.get("faceTrackMode");
+        float minFaceSize = (Float) cameraParam.get("minFaceSize");
 
-    FaceDetectorOptions.Builder optionsBuilder =
-        new FaceDetectorOptions.Builder()
-            .setLandmarkMode(landmarkMode)
-            .setContourMode(contourMode)
-            .setClassificationMode(classificationMode)
-            .setPerformanceMode(performanceMode)
-            .setMinFaceSize(minFaceSize);
-    if (enableFaceTracking) {
-      optionsBuilder.enableTracking();
+        FaceDetectorOptions.Builder optionsBuilder =
+                new FaceDetectorOptions.Builder()
+                        .setLandmarkMode(landmarkMode)
+                        .setContourMode(contourMode)
+                        .setClassificationMode(classificationMode)
+                        .setPerformanceMode(performanceMode)
+                        .setMinFaceSize(minFaceSize);
+        if (enableFaceTracking) {
+            optionsBuilder.enableTracking();
+        }
+        return optionsBuilder.build();
     }
-    return optionsBuilder.build();
-  }
 
-  public static boolean isCameraLiveViewportEnabled(Context context) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return sharedPreferences.getBoolean("clv", false);
-  }
+    public static boolean isCameraLiveViewportEnabled(Context context) {
+        return (Boolean) cameraParam.get("enableViewport");
+    }
 
-  private PreferenceUtils() {}
+    private PreferenceUtils() {
+    }
 }
