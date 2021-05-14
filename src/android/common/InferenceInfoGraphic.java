@@ -22,10 +22,13 @@ import android.graphics.Paint;
 
 import androidx.annotation.Nullable;
 
+import jp.co.tripodw.iot.facedetection.preference.LivePreviewPreferenceFragment;
+
 /**
  * Graphic instance for rendering inference info (latency, FPS, resolution) in an overlay view.
  */
 public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
+    private static final String TAG = "InferenceInfoGraphic";
 
     private static final int TEXT_COLOR = Color.WHITE;
     private static final float TEXT_SIZE = 60.0f;
@@ -58,6 +61,13 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
 
     @Override
     public synchronized void draw(Canvas canvas) {
+
+        boolean isDraw = LivePreviewPreferenceFragment.getLiveCanvas();
+//        Log.i(TAG, "getLiveCanvas'" + isDraw);
+        if (!isDraw) {
+            return;
+        }
+
         float x = TEXT_SIZE * 0.5f;
         float y = TEXT_SIZE * 1.5f;
 

@@ -17,8 +17,6 @@
 package jp.co.tripodw.iot.facedetection.preference;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 
@@ -37,6 +35,7 @@ import jp.co.tripodw.iot.facedetection.common.CameraSource.SizePair;
  */
 public class PreferenceUtils {
     private static Map<String, Object> cameraParam = new HashMap<>();
+
     static {
         cameraParam.put("enableViewport", true);
         cameraParam.put("landmarkMode", FaceDetectorOptions.LANDMARK_MODE_NONE);
@@ -45,6 +44,15 @@ public class PreferenceUtils {
         cameraParam.put("performanceMode", FaceDetectorOptions.PERFORMANCE_MODE_FAST);
         cameraParam.put("faceTrackMode", false);
         cameraParam.put("minFaceSize", 0.1f);
+
+        cameraParam.put("liveCanvas", true);
+
+        cameraParam.put("frontSize", "640x480");
+        cameraParam.put("backSize", "640x480");
+    }
+
+    public static Object getParam(@Nullable String prefKeyId) {
+        return cameraParam.get(prefKeyId);
     }
 
     public static void saveParam(@Nullable String prefKeyId, Object value) {
@@ -56,24 +64,20 @@ public class PreferenceUtils {
         Preconditions.checkArgument(
                 cameraId == CameraSource.CAMERA_FACING_BACK
                         || cameraId == CameraSource.CAMERA_FACING_FRONT);
+
         String previewSizePrefKey;
         String pictureSizePrefKey;
         if (cameraId == CameraSource.CAMERA_FACING_BACK) {
-            previewSizePrefKey = "rcpvs";
-            pictureSizePrefKey = "rcpts";
+            previewSizePrefKey = "backSize";
+            pictureSizePrefKey = "backSize";
         } else {
-            previewSizePrefKey = "fcpvs";
-            pictureSizePrefKey = "fcpts";
+            previewSizePrefKey = "frontSize";
+            pictureSizePrefKey = "frontSize";
         }
 
-        try {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            return new SizePair(
-                    Size.parseSize(sharedPreferences.getString(previewSizePrefKey, null)),
-                    Size.parseSize(sharedPreferences.getString(pictureSizePrefKey, null)));
-        } catch (Exception e) {
-            return null;
-        }
+        return new SizePair(
+                Size.parseSize((String) cameraParam.get(previewSizePrefKey)),
+                Size.parseSize((String) cameraParam.get(pictureSizePrefKey)));
     }
 
     public static FaceDetectorOptions getFaceDetectorOptionsForLivePreview() {

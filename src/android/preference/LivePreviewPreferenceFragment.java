@@ -21,7 +21,6 @@ import android.util.Log;
 
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.tripodw.iot.facedetection.common.CameraSource;
@@ -52,9 +51,6 @@ public class LivePreviewPreferenceFragment {
     public static void setContourMode(boolean value) {
         if (value) {
             PreferenceUtils.saveParam("contourMode", FaceDetectorOptions.CONTOUR_MODE_ALL);
-            LivePreviewPreferenceFragment.setLandmarkMode(false);
-            LivePreviewPreferenceFragment.setClassificationMode(false);
-            LivePreviewPreferenceFragment.setEnableFaceTracking(false);
         } else {
             PreferenceUtils.saveParam("contourMode", FaceDetectorOptions.CONTOUR_MODE_NONE);
         }
@@ -78,34 +74,41 @@ public class LivePreviewPreferenceFragment {
 
     public static void setEnableFaceTracking(boolean value) {
         PreferenceUtils.saveParam("faceTrackMode", value);
-        if (value) {
-            LivePreviewPreferenceFragment.setContourMode(false);
-        }
     }
 
-    public static void setUpCameraSize() {
+    public static void setUpCameraSize(String cameraSize) {
+
         Log.i(TAG, "previewSize start for CAMERA_FACING_BACK");
-        setUpCameraPreviewSize(
-                CameraSource.CAMERA_FACING_BACK);
+        setUpCameraPreviewSize(cameraSize, CameraSource.CAMERA_FACING_BACK);
 
         Log.i(TAG, "previewSize start for CAMERA_FACING_FRONT");
-        setUpCameraPreviewSize(
-                CameraSource.CAMERA_FACING_FRONT);
+        setUpCameraPreviewSize(cameraSize, CameraSource.CAMERA_FACING_FRONT);
     }
 
-    private static void setUpCameraPreviewSize(int cameraId) {
+    public static Boolean getLiveCanvas() {
+        return (Boolean) PreferenceUtils.getParam("liveCanvas");
+    }
+
+    private static void setUpCameraPreviewSize(String cameraSize, int cameraId) {
         Camera camera = null;
         try {
             camera = Camera.open(cameraId);
 
             List<SizePair> previewSizeList = CameraSource.generateValidPreviewSizeList(camera);
-            ArrayList<String> previewSizeStringValues = new ArrayList<>();
 
             for (SizePair sizePair : previewSizeList) {
-                Log.i(TAG, "previewSize=" + sizePair.preview.toString());
-                previewSizeStringValues.add(sizePair.preview.toString());
-            }
+                String support = sizePair.preview.toString();
+                Log.i(TAG, "previewSize=" + support);
+                if (cameraSize.equals(support) && cameraId == CameraSource.CAMERA_FACING_BACK) {
+                    PreferenceUtils.saveParam("backSize", support);
+                    break;
+                }
 
+                if (cameraSize.equals(support) && cameraId == CameraSource.CAMERA_FACING_FRONT) {
+                    PreferenceUtils.saveParam("frontSize", support);
+                    break;
+                }
+            }
         } catch (RuntimeException e) {
             Log.e(TAG, "pRuntimeException", e);
         } finally {

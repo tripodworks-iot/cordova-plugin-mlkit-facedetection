@@ -18,7 +18,9 @@ package jp.co.tripodw.iot.facedetection;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +28,15 @@ import android.widget.FrameLayout;
 
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import jp.co.tripodw.iot.facedetection.common.CameraSource;
 import jp.co.tripodw.iot.facedetection.common.CameraSourcePreview;
 import jp.co.tripodw.iot.facedetection.common.GraphicOverlay;
 import jp.co.tripodw.iot.facedetection.facedetector.FaceDetectorProcessor;
+import jp.co.tripodw.iot.facedetection.preference.LivePreviewPreferenceFragment;
 import jp.co.tripodw.iot.facedetection.preference.PreferenceUtils;
 
 
@@ -65,22 +70,12 @@ public class LivePreviewActivity extends Fragment {
         return view;
     }
 
-    public void setRect(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-
-    public void setCamera(boolean front) {
-        this.front = front;
-    }
-
     public void stopCamera() {
-        if (cameraSource != null) {
-            cameraSource.release();
-            cameraSource = null;
+        if (cameraSource == null) {
+            return;
         }
+        cameraSource.release();
+        cameraSource = null;
     }
 
     public CameraSource getCameraSource() {
@@ -88,19 +83,21 @@ public class LivePreviewActivity extends Fragment {
     }
 
     private void createCameraPreview() {
-        if (preview == null) {
-            //set box position and size
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
-            layoutParams.setMargins(x, y, 0, 0);
-            frameContainerLayout = (FrameLayout) view.findViewById(getResources().getIdentifier("frame_container", "id", appResourcesPackage));
-            frameContainerLayout.setLayoutParams(layoutParams);
-
-            preview = (CameraSourcePreview) view.findViewById(getResources().getIdentifier("preview_view", "id", appResourcesPackage));
-
-            graphicOverlay = (GraphicOverlay) view.findViewById(getResources().getIdentifier("graphic_overlay", "id", appResourcesPackage));
-
-            createCameraSource();
+        if (preview != null) {
+            return;
         }
+
+        //set box position and size
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+        layoutParams.setMargins(x, y, 0, 0);
+        frameContainerLayout = (FrameLayout) view.findViewById(getResources().getIdentifier("frame_container", "id", appResourcesPackage));
+        frameContainerLayout.setLayoutParams(layoutParams);
+
+        preview = (CameraSourcePreview) view.findViewById(getResources().getIdentifier("preview_view", "id", appResourcesPackage));
+
+        graphicOverlay = (GraphicOverlay) view.findViewById(getResources().getIdentifier("graphic_overlay", "id", appResourcesPackage));
+
+        createCameraSource();
     }
 
     public void createCameraSource() {
@@ -132,21 +129,93 @@ public class LivePreviewActivity extends Fragment {
      * again when the camera source is created.
      */
     public void startCameraSource() {
-        if (cameraSource != null) {
-            try {
-                if (preview == null) {
-                    Log.d(TAG, "resume: Preview is null");
-                }
-                if (graphicOverlay == null) {
-                    Log.d(TAG, "resume: graphOverlay is null");
-                }
-                preview.start(cameraSource, graphicOverlay);
-            } catch (IOException e) {
-                Log.e(TAG, "Unable to start camera source.", e);
-                cameraSource.release();
-                cameraSource = null;
-            }
+        if (cameraSource == null) {
+            Log.e(TAG, "resume: cameraSource is null");
+            return;
         }
+
+        if (preview == null) {
+            Log.e(TAG, "resume: Preview is null");
+            return;
+        }
+        if (graphicOverlay == null) {
+            Log.e(TAG, "resume: graphOverlay is null");
+            return;
+        }
+
+        try {
+            preview.start(cameraSource, graphicOverlay);
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to start camera source.", e);
+            cameraSource.release();
+            cameraSource = null;
+        }
+    }
+
+    public void setCameraParams(JSONObject params, DisplayMetrics metrics) {
+
+        this.setCameraType(params);
+        this.setRect(params, metrics);
+
+        // カメラサイズ設定
+        String cameraSize = params.optString("cameraSize", "640x480");
+        LivePreviewPreferenceFragment.setUpCameraSize(cameraSize);
+
+        boolean enableViewport = params.optBoolean("viewport", true);
+        Log.i(TAG, "viewportEnable:" + enableViewport);
+        LivePreviewPreferenceFragment.setEnableViewport(enableViewport);
+
+        float minFaceSize = (float) params.optDouble("minFaceSize", 0.1);
+        Log.i(TAG, "minFaceSize:" + minFaceSize);
+        if (minFaceSize < 0.0f || minFaceSize > 1.0f) {
+            minFaceSize = 0.1f;
+        }
+        LivePreviewPreferenceFragment.setMinFaceSize(minFaceSize);
+
+        boolean performanceMode = params.optBoolean("performance", true);
+        Log.i(TAG, "performanceMode:" + performanceMode);
+        LivePreviewPreferenceFragment.setPerformanceMode(performanceMode);
+
+        boolean landmarkMode = params.optBoolean("landmark", true);
+        Log.i(TAG, "landmarkMode:" + landmarkMode);
+        LivePreviewPreferenceFragment.setLandmarkMode(landmarkMode);
+
+        boolean classificationMode = params.optBoolean("classification", true);
+        Log.i(TAG, "classificationMode:" + classificationMode);
+        LivePreviewPreferenceFragment.setClassificationMode(classificationMode);
+
+        boolean enableFaceTracking = params.optBoolean("faceTrack", false);
+        Log.i(TAG, "faceTrack:" + enableFaceTracking);
+        LivePreviewPreferenceFragment.setEnableFaceTracking(enableFaceTracking);
+
+        boolean contourMode = params.optBoolean("contour", false);
+        Log.i(TAG, "contourMode:" + contourMode);
+        LivePreviewPreferenceFragment.setContourMode(contourMode);
+        if (contourMode) {
+            LivePreviewPreferenceFragment.setLandmarkMode(false);
+            LivePreviewPreferenceFragment.setClassificationMode(false);
+            LivePreviewPreferenceFragment.setEnableFaceTracking(false);
+        }
+    }
+
+    private void setRect(JSONObject params, DisplayMetrics metrics) {
+        // offset
+        int x = params.optInt("x", 0);
+        int y = params.optInt("y", 0);
+        this.x = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x, metrics);
+        this.y = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, y, metrics);
+
+        // size
+        int width = params.optInt("width", 0);
+        int height = params.optInt("height", 0);
+        this.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, metrics);
+        this.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, metrics);
+    }
+
+    private void setCameraType(JSONObject params) {
+        boolean front = params.optBoolean("front", false);
+        Log.i(TAG, "front:" + front);
+        this.front = front;
     }
 
     @Override

@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.widget.FrameLayout;
 
 import org.apache.cordova.CallbackContext;
@@ -84,27 +83,11 @@ public class faceDetection extends CordovaPlugin {
             this.checkCamera(callbackContext);
             return;
         }
-        this.setCameraParams(params);
-
-        this.fragment = new LivePreviewActivity();
-
-        this.fragment.setCamera(params.optBoolean("front", false));
 
         DisplayMetrics metrics = cordova.getActivity().getResources().getDisplayMetrics();
 
-        // offset
-        int x = params.optInt("x", 0);
-        int y = params.optInt("y", 0);
-        int computedX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x, metrics);
-        int computedY = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, y, metrics);
-
-        // size
-        int width = params.optInt("width", 0);
-        int height = params.optInt("height", 0);
-        int computedWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, metrics);
-        int computedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, metrics);
-
-        fragment.setRect(computedX, computedY, computedWidth, computedHeight);
+        this.fragment = new LivePreviewActivity();
+        fragment.setCameraParams(params, metrics);
 
         cordova.getActivity().runOnUiThread(() -> {
             //create or update the layout params for the container view
@@ -127,7 +110,6 @@ public class faceDetection extends CordovaPlugin {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(containerView.getId(), fragment);
             fragmentTransaction.commit();
-
         });
     }
 
@@ -156,42 +138,5 @@ public class faceDetection extends CordovaPlugin {
             fragment.createCameraSource();
             fragment.startCameraSource();
         });
-    }
-
-    private void setCameraParams(JSONObject params) {
-
-//        // カメラサイズ設定
-//        LivePreviewPreferenceFragment.setUpCameraSize();
-
-//        boolean enableViewport = params.optBoolean("viewport", true);
-//        Log.i(TAG, "viewportEnable:" + enableViewport);
-//        LivePreviewPreferenceFragment.setEnableViewport(enableViewport);
-//
-//        float minFaceSize = (float) params.optDouble("minFaceSize", 0.1);
-//        Log.i(TAG, "minFaceSize:" + minFaceSize);
-//        if (minFaceSize < 0.0f || minFaceSize > 1.0f) {
-//            minFaceSize = 0.1f;
-//        }
-//        LivePreviewPreferenceFragment.setMinFaceSize(minFaceSize);
-//
-//        boolean performanceMode = params.optBoolean("performance", true);
-//        Log.i(TAG, "performanceMode:" + performanceMode);
-//        LivePreviewPreferenceFragment.setPerformanceMode(performanceMode);
-//
-//        boolean landmarkMode = params.optBoolean("landmark", true);
-//        Log.i(TAG, "landmarkMode:" + landmarkMode);
-//        LivePreviewPreferenceFragment.setLandmarkMode(landmarkMode);
-//
-//        boolean classificationMode = params.optBoolean("classification", true);
-//        Log.i(TAG, "classificationMode:" + classificationMode);
-//        LivePreviewPreferenceFragment.setClassificationMode(classificationMode);
-//
-//        boolean contourMode = params.optBoolean("contour", false);
-//        Log.i(TAG, "contourMode:" + contourMode);
-//        LivePreviewPreferenceFragment.setContourMode(contourMode);
-//
-//        boolean enableFaceTracking = params.optBoolean("faceTrack", false);
-//        Log.i(TAG, "faceTrack:" + enableFaceTracking);
-//        LivePreviewPreferenceFragment.setEnableFaceTracking(enableFaceTracking);
     }
 }
