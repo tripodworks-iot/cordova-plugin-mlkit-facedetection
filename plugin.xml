@@ -25,6 +25,10 @@
 
     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
 
+    <!-- <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <activity android:label="cameraX Activity" android:name="jp.co.tripodw.iot.facedetection.CameraXLivePreviewActivity"></activity>
+    </config-file> -->
+
     <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-feature android:name="android.hardware.camera"/>
       <uses-feature android:name="android.hardware.camera.autofocus"/>
@@ -35,6 +39,7 @@
 
     <source-file src="src/android/faceDetection.java" target-dir="src/jp/co/tripodw/iot/facedetection/" />
     <source-file src="src/android/LivePreviewActivity.java" target-dir="src/jp/co/tripodw/iot/facedetection/" />
+    <source-file src="src/android/CameraXLivePreviewActivity.java" target-dir="src/jp/co/tripodw/iot/facedetection/" />
 
     <source-file src="src/android/preference/PreferenceUtils.java" target-dir="src/jp/co/tripodw/iot/facedetection/preference/" />
     <source-file src="src/android/preference/LivePreviewPreferenceFragment.java" target-dir="src/jp/co/tripodw/iot/facedetection/preference/" />
@@ -53,7 +58,10 @@
     <source-file src="src/android/common/VisionImageProcessor.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
     <source-file src="src/android/common/VisionProcessorBase.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
 
+    <source-file src="src/android/common/CameraXViewModel.java" target-dir="src/jp/co/tripodw/iot/facedetection/common" />
+
     <source-file src="src/android/live_preview_activity.xml" target-dir="res/layout" />
+    <source-file src="src/android/live_preview_x_activity.xml" target-dir="res/layout" />
   </platform>
 
   <platform name="ios">

@@ -1,12 +1,22 @@
 package jp.co.tripodw.iot.facedetection;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Application;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.FrameLayout;
+
+//import androidx.fragment.app.Fragment;
+//import androidx.fragment.app.FragmentManager;
+//import androidx.fragment.app.FragmentTransaction;
+
+import androidx.lifecycle.ViewModelProvider;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -31,11 +41,14 @@ public class faceDetection extends CordovaPlugin {
     private static final int CAM_REQ_CODE = 1;
     private CallbackContext execCallback;
     private JSONObject execArgs;
+    String action;
 
     private LivePreviewActivity fragment;
+    private CameraXLivePreviewActivity fragmentx;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        this.action = action;
         this.execCallback = callbackContext;
         if (action.equals("start")) {
             Log.d(TAG, "execute start");
@@ -50,7 +63,21 @@ public class faceDetection extends CordovaPlugin {
             Log.d(TAG, "execute stop");
             this.stopCamera(this.execCallback);
             return true;
+        }else if (action.equals("startX")) {
+            Log.d(TAG, "execute start");
+            this.execArgs = args.getJSONObject(0);
+            if (this.checkPermissions()) {
+                this.startCameraX(this.execArgs, this.execCallback);
+            } else {
+                cordova.requestPermissions(this, CAM_REQ_CODE, permissions);
+            }
+            return true;
+        } else if (action.equals("stopX")) {
+            Log.d(TAG, "execute stop");
+            this.stopCameraX(this.execCallback);
+            return true;
         }
+
         return false;
     }
 
@@ -74,7 +101,11 @@ public class faceDetection extends CordovaPlugin {
         }
 
         if (requestCode == CAM_REQ_CODE) {
-            this.startCamera(this.execArgs, this.execCallback);
+            if (action.equals("start")) {
+                this.startCamera(this.execArgs, this.execCallback);
+            }else {
+                this.startCameraX(this.execArgs, this.execCallback);
+            }
         }
     }
 
@@ -88,28 +119,33 @@ public class faceDetection extends CordovaPlugin {
 
         this.fragment = new LivePreviewActivity();
         fragment.setCameraParams(params, metrics);
+//        this.startCameraThread(fragment);
+    }
 
-        cordova.getActivity().runOnUiThread(() -> {
-            //create or update the layout params for the container view
-            int containerViewId = 20;
-            FrameLayout containerView = (FrameLayout) cordova.getActivity().findViewById(containerViewId);
-            if (containerView == null) {
-                containerView = new FrameLayout(cordova.getActivity().getApplicationContext());
-                containerView.setId(containerViewId);
+    private void startCameraThread(Fragment params) {
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                //create or update the layout params for the container view
+                int containerViewId = 20;
+                FrameLayout containerView = (FrameLayout) cordova.getActivity().findViewById(containerViewId);
+                if (containerView == null) {
+                    containerView = new FrameLayout(cordova.getActivity().getApplicationContext());
+                    containerView.setId(containerViewId);
 
-                FrameLayout.LayoutParams containerLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-                cordova.getActivity().addContentView(containerView, containerLayoutParams);
+                    FrameLayout.LayoutParams containerLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+                    cordova.getActivity().addContentView(containerView, containerLayoutParams);
+                }
+
+                //set camera back to front
+                containerView.setAlpha(1);
+                containerView.bringToFront();
+
+                //add the fragment to the container
+                FragmentManager fragmentManager = cordova.getActivity().getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(containerView.getId(), params);
+                fragmentTransaction.commit();
             }
-
-            //set camera back to front
-            containerView.setAlpha(1);
-            containerView.bringToFront();
-
-            //add the fragment to the container
-            FragmentManager fragmentManager = cordova.getActivity().getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(containerView.getId(), fragment);
-            fragmentTransaction.commit();
         });
     }
 
@@ -124,8 +160,10 @@ public class faceDetection extends CordovaPlugin {
             return;
         }
 
-        cordova.getActivity().runOnUiThread(() -> {
-            fragment.stopCamera();
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                fragment.stopCamera();
+            }
         });
     }
 
@@ -134,9 +172,62 @@ public class faceDetection extends CordovaPlugin {
             callbackContext.error("camera started!");
             return;
         }
-        cordova.getActivity().runOnUiThread(() -> {
-            fragment.createCameraSource();
-            fragment.startCameraSource();
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                fragment.createCameraSource();
+                fragment.startCameraSource();
+            }
+        });
+    }
+
+    private void startCameraX(JSONObject params, CallbackContext callbackContext) {
+        if (this.fragmentx != null) {
+            return;
+        }
+
+        DisplayMetrics metrics = cordova.getActivity().getResources().getDisplayMetrics();
+        this.fragmentx = new CameraXLivePreviewActivity();
+        fragmentx.setCameraParams(params, metrics);
+
+//        cordova.getActivity().runOnUiThread(new Runnable() {
+//            public void run() {
+//                Intent intent = new Intent(cordova.getActivity().getApplicationContext(), CameraXLivePreviewActivity.class);
+//                cordova.getActivity().startActivity(intent);
+//            }
+//        });
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                //create or update the layout params for the container view
+                int containerViewId = 20;
+                FrameLayout containerView = (FrameLayout) cordova.getActivity().findViewById(containerViewId);
+                if (containerView == null) {
+                    containerView = new FrameLayout(cordova.getActivity().getApplicationContext());
+                    containerView.setId(containerViewId);
+
+                    FrameLayout.LayoutParams containerLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+                    cordova.getActivity().addContentView(containerView, containerLayoutParams);
+                }
+
+                //set camera back to front
+                containerView.setAlpha(1);
+                containerView.bringToFront();
+
+                //add the fragment to the container
+
+                FragmentManager fragmentManager = cordova.getActivity().getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.add(containerView.getId(), fragmentx);
+                fragmentTransaction.commit();
+            }
+        });
+
+    }
+
+    private void stopCameraX(CallbackContext callbackContext) {
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                fragmentx.stopCamera();
+            }
         });
     }
 }

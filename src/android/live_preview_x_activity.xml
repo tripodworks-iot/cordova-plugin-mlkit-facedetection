@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="jp.co.tripodw.iot.facedetection.CameraXLivePreviewActivity"
+    android:id="@+id/frame_container"
+    android:tag="frame_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center_horizontal|top"
+    android:layout_weight=".7">
+
+  <androidx.camera.view.PreviewView
+      android:id="@+id/preview_view"
+      android:tag="preview_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="fitXY"
+      android:layout_gravity="top" />
+
+  <jp.co.tripodw.iot.facedetection.common.GraphicOverlay
+      android:id="@+id/graphic_overlay"
+      android:tag="graphic_overlay"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="fitXY"
+      android:layout_gravity="top" />
+</FrameLayout>

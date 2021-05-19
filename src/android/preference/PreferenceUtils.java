@@ -17,8 +17,10 @@
 package jp.co.tripodw.iot.facedetection.preference;
 
 import android.content.Context;
-
+import android.os.Build.VERSION_CODES;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.camera.core.CameraSelector;
 
 import com.google.android.gms.common.images.Size;
 import com.google.common.base.Preconditions;
@@ -110,6 +112,24 @@ public class PreferenceUtils {
         return (Boolean) cameraParam.get("enableViewport");
     }
 
-    private PreferenceUtils() {
+    @RequiresApi(VERSION_CODES.LOLLIPOP)
+    @Nullable
+    public static android.util.Size getCameraXTargetResolution(int lensfacing) {
+        Preconditions.checkArgument(
+                lensfacing == CameraSelector.LENS_FACING_BACK
+                        || lensfacing == CameraSelector.LENS_FACING_FRONT);
+
+        String previewSizePrefKey;
+        if (lensfacing == CameraSelector.LENS_FACING_BACK) {
+            previewSizePrefKey = "backSize";
+        } else {
+            previewSizePrefKey = "frontSize";
+        }
+
+        try {
+            return android.util.Size.parseSize((String) cameraParam.get(previewSizePrefKey));
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

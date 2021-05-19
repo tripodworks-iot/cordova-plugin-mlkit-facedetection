@@ -90,12 +90,11 @@ public class LivePreviewActivity extends Fragment {
         //set box position and size
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
         layoutParams.setMargins(x, y, 0, 0);
-        frameContainerLayout = (FrameLayout) view.findViewById(getResources().getIdentifier("frame_container", "id", appResourcesPackage));
+        frameContainerLayout = view.findViewById(getResources().getIdentifier("frame_container", "id", appResourcesPackage));
         frameContainerLayout.setLayoutParams(layoutParams);
 
-        preview = (CameraSourcePreview) view.findViewById(getResources().getIdentifier("preview_view", "id", appResourcesPackage));
-
-        graphicOverlay = (GraphicOverlay) view.findViewById(getResources().getIdentifier("graphic_overlay", "id", appResourcesPackage));
+        preview = view.findViewById(getResources().getIdentifier("preview_view", "id", appResourcesPackage));
+        graphicOverlay = view.findViewById(getResources().getIdentifier("graphic_overlay", "id", appResourcesPackage));
 
         createCameraSource();
     }
