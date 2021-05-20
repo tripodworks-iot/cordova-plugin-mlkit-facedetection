@@ -1,22 +1,13 @@
 package jp.co.tripodw.iot.facedetection;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Application;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.FrameLayout;
-
-//import androidx.fragment.app.Fragment;
-//import androidx.fragment.app.FragmentManager;
-//import androidx.fragment.app.FragmentTransaction;
-
-import androidx.lifecycle.ViewModelProvider;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -63,7 +54,7 @@ public class faceDetection extends CordovaPlugin {
             Log.d(TAG, "execute stop");
             this.stopCamera(this.execCallback);
             return true;
-        }else if (action.equals("startX")) {
+        } else if (action.equals("startX")) {
             Log.d(TAG, "execute start");
             this.execArgs = args.getJSONObject(0);
             if (this.checkPermissions()) {
@@ -103,7 +94,7 @@ public class faceDetection extends CordovaPlugin {
         if (requestCode == CAM_REQ_CODE) {
             if (action.equals("start")) {
                 this.startCamera(this.execArgs, this.execCallback);
-            }else {
+            } else {
                 this.startCameraX(this.execArgs, this.execCallback);
             }
         }
@@ -119,7 +110,7 @@ public class faceDetection extends CordovaPlugin {
 
         this.fragment = new LivePreviewActivity();
         fragment.setCameraParams(params, metrics);
-//        this.startCameraThread(fragment);
+        this.startCameraThread(fragment);
     }
 
     private void startCameraThread(Fragment params) {

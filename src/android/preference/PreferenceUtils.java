@@ -18,6 +18,7 @@ package jp.co.tripodw.iot.facedetection.preference;
 
 import android.content.Context;
 import android.os.Build.VERSION_CODES;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.camera.core.CameraSelector;
