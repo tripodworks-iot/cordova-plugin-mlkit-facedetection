@@ -155,6 +155,12 @@ public class faceDetection extends CordovaPlugin implements LivePreviewActivity.
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 fragment.stopCamera();
+                FragmentManager fragmentManager = cordova.getActivity().getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragment);
+                fragmentTransaction.commit();
+                fragment = null;
+                callbackContext.success();
             }
         });
     }

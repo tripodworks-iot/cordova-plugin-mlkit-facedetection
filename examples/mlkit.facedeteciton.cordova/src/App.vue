@@ -49,9 +49,9 @@
 </template>
 
 <script>
-
+const bgImage = require('@src/assets/camera.png');
 const bgImageStyle = {
-  'background-color': 'black',
+  backgroundImage: 'url(' + bgImage + ')',
   backgroundSize: 'contain',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
@@ -102,11 +102,11 @@ export default {
         faceTrack:true,
       };
       window.faceDetection.start(options, this.successCallback, this.errorCallback);
+      this.isCameraStart = true;
     },
 
     successCallback(result){
       //this.$log.debug('[face]successCallback result=' + JSON.stringify(result));
-      this.isCameraStart = true;
       if(result.type === 'image'){
         this.liveFrame = result.data;
       }
@@ -117,16 +117,15 @@ export default {
 
     errorCallback(result){
       this.$log.debug('[face]errorCallback result=' + result);
+      this.isCameraStart = false;
       alert('error:' + result);
     },
 
     goStopFaceDetection(){
       this.$log.debug('[face]goStopFaceDetection call');
       window.faceDetection.stop(this.successCallback, this.errorCallback);
-      const me = this;
-      setTimeout(function(){
-        me.isCameraStart = false;
-      }, 500);
+      this.isCameraStart = false;
+      this.imageStyle.backgroundImage = 'url(' + bgImage + ')';
     }
   },
   mounted: function() {
