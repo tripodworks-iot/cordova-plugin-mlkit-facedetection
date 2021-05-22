@@ -31,6 +31,8 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jp.co.tripodw.iot.facedetection.common.CameraSource;
@@ -65,6 +67,8 @@ public class LivePreviewActivity extends Fragment implements GraphicOverlay.Grap
 
     public interface LivePreviewActivityListener {
         void onLiveFrame(JSONObject liveFrame);
+
+        void onFaceFrame(JSONObject faceFrame);
     }
 
     public void setEventListener(LivePreviewActivityListener listener) {
@@ -99,6 +103,19 @@ public class LivePreviewActivity extends Fragment implements GraphicOverlay.Grap
         }
         JSONObject json = new JSONObject(liveFrame);
         this.eventListener.onLiveFrame(json);
+    }
+
+    public void onFaceGraphic(List<Map<String, String>> faceList) {
+        if (faceList == null) {
+            return;
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("type", "face");
+        data.put("data", faceList);
+
+        JSONObject json = new JSONObject(data);
+        this.eventListener.onFaceFrame(json);
     }
 
     private void createCameraPreview() {

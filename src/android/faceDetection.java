@@ -179,6 +179,13 @@ public class faceDetection extends CordovaPlugin implements LivePreviewActivity.
         this.execCallback.sendPluginResult(pluginResult);
     }
 
+    public void onFaceFrame(JSONObject faceFrame) {
+        //Log.d(TAG, "onFaceFrame:" + faceFrame.toString());
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, faceFrame);
+        pluginResult.setKeepCallback(true);
+        this.execCallback.sendPluginResult(pluginResult);
+    }
+
     private void startCameraX(JSONObject params, CallbackContext callbackContext) {
         if (this.fragmentx != null) {
             return;

@@ -26,6 +26,7 @@ import com.google.mlkit.vision.face.FaceContour;
 import com.google.mlkit.vision.face.FaceLandmark;
 import com.google.mlkit.vision.face.FaceLandmark.LandmarkType;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -63,6 +64,8 @@ public class FaceGraphic extends Graphic {
     private final Paint[] labelPaints;
 
     private volatile Face face;
+
+    private Map<String, String> FaceFrame;
 
     FaceGraphic(GraphicOverlay overlay, Face face) {
         super(overlay);
@@ -102,6 +105,8 @@ public class FaceGraphic extends Graphic {
         if (face == null) {
             return;
         }
+
+        setFaceFrame(face);
 
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getBoundingBox().centerX());
@@ -260,6 +265,43 @@ public class FaceGraphic extends Graphic {
         drawFaceLandmark(canvas, FaceLandmark.RIGHT_EYE);
         drawFaceLandmark(canvas, FaceLandmark.LEFT_CHEEK);
         drawFaceLandmark(canvas, FaceLandmark.RIGHT_CHEEK);
+    }
+
+    private void setFaceFrame(Face face) {
+        FaceFrame = new HashMap<>();
+
+        if (face.getTrackingId() == null) {
+            FaceFrame.put("id", "");
+        } else {
+            FaceFrame.put("id", face.getTrackingId() + "");
+        }
+
+        if (face.getSmilingProbability() == null) {
+            FaceFrame.put("smiling", "");
+        } else {
+            FaceFrame.put("smiling", String.format(Locale.US, "%.2f", face.getSmilingProbability()));
+        }
+
+        if (face.getLeftEyeOpenProbability() == null) {
+            FaceFrame.put("leftEyeOpen", "");
+        } else {
+            FaceFrame.put("leftEyeOpen", String.format(Locale.US, "%.2f", face.getLeftEyeOpenProbability()));
+        }
+
+        if (face.getRightEyeOpenProbability() == null) {
+            FaceFrame.put("rightEyeOpen", "");
+        } else {
+            FaceFrame.put("rightEyeOpen", String.format(Locale.US, "%.2f", face.getRightEyeOpenProbability()));
+        }
+
+        FaceFrame.put("eulerX", face.getHeadEulerAngleX() + "");
+        FaceFrame.put("eulerY", face.getHeadEulerAngleY() + "");
+        FaceFrame.put("eulerZ", face.getHeadEulerAngleZ() + "");
+    }
+
+    @Override
+    public Map<String, String> getFaceFrame() {
+        return this.FaceFrame;
     }
 
     @Override

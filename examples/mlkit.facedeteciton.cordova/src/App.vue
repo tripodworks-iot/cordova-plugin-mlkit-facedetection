@@ -16,6 +16,34 @@
       <section style="margin-top: 5px; padding:5px;text-align: left;">
         <v-ons-button modifier="large" @click="goStopFaceDetection()">stop</v-ons-button>
       </section>
+
+      <div v-show="isCameraStart" style="margin-top: 10px; text-align: left;">
+        <div style="padding-left:5px;">
+            <b>live frame information</b>
+        </div>
+        <div style="padding-left:10px;">
+            <li>InputImage size: {{liveFrame.imageSize}}</li>
+            <li>FPS: {{liveFrame.framesPerSecond}}, Frame latency: {{liveFrame.frameLatency}}</li>
+            <li>Detector latency: {{liveFrame.detectorLatency}}</li>
+        </div>
+      </div>
+
+      <div v-show="isCameraStart" style="margin-top: 10px; text-align: left;">
+        <div style="padding-left:5px;">
+            <b>detected faces information</b>
+        </div>
+
+        <!--eslint-disable-next-line-->
+        <div v-for="(face, index) in faceList">
+          <div style="padding-left:10px;" :key="index">
+              <li>id: {{face.id}}, smiling: {{face.smiling}}</li>
+              <li>leftEyeOpen: {{face.leftEyeOpen}}, rightEyeOpen: {{face.rightEyeOpen}}</li>
+              <li>eulerX: {{face.eulerX}}, eulerY: {{face.eulerY}}, eulerZ: {{face.eulerZ}}</li>
+          </div>
+        </div>
+
+      </div>
+
     </v-ons-page>
   </div>
 </template>
@@ -30,7 +58,7 @@ const bgImageStyle = {
   display: 'table',
   'text-align': 'center',
   width: '100%',
-  height: window.parent.screen.height * 0.6 + 'px'
+  height: window.parent.screen.height * 0.4 + 'px'
 };
 
 export default {
@@ -40,6 +68,14 @@ export default {
   data() {
     return {
       imageStyle: bgImageStyle,
+      isCameraStart: false,
+      liveFrame: {
+        imageSize:"",
+        framesPerSecond:"",
+        frameLatency:"",
+        detectorLatency:"",
+      },
+      faceList: [],
     }
   },
   methods: {
@@ -59,18 +95,23 @@ export default {
         width: width,
         height: height,
         front: false,
-        landmark:false,
-        classification:false,
-        faceTrack:true,
-        liveCanvas:false,
+        minFaceSize: 0.5,
+        landmark:true,
+        classification:true,
+        faceTrack:false,
       };
-
       window.faceDetection.start(options, this.successCallback, this.errorCallback);
     },
 
     successCallback(result){
-      this.$log.debug('[face]successCallback result=' + JSON.stringify(result));
-      alert('success:' + result);
+      //this.$log.debug('[face]successCallback result=' + JSON.stringify(result));
+      this.isCameraStart = true;
+      if(result.type === 'frame'){
+        this.liveFrame = result.data;
+      }
+      if(result.type === 'face'){
+        this.faceList = result.data;
+      }
     },
 
     errorCallback(result){
@@ -81,6 +122,10 @@ export default {
     goStopFaceDetection(){
       this.$log.debug('[face]goStopFaceDetection call');
       window.faceDetection.stop(this.successCallback, this.errorCallback);
+      const me = this;
+      setTimeout(function(){
+              me.isCameraStart = false;
+      }, 300);
     }
   },
   mounted: function() {

@@ -44,4 +44,9 @@ public class CameraImageGraphic extends Graphic {
     public Map<String, Object> getLiveFrame() {
         return null;
     }
+
+    @Override
+    public Map<String, String> getFaceFrame() {
+        return null;
+    }
 }

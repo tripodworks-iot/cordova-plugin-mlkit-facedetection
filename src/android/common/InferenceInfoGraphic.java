@@ -115,4 +115,9 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
     public synchronized Map<String, Object> getLiveFrame() {
         return drawFrame;
     }
+
+    @Override
+    public Map<String, String> getFaceFrame() {
+        return null;
+    }
 }

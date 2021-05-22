@@ -143,6 +143,7 @@ public class GraphicOverlay extends View {
 
         public abstract Map<String, Object> getLiveFrame();
 
+        public abstract Map<String, String> getFaceFrame();
     }
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
@@ -248,11 +249,19 @@ public class GraphicOverlay extends View {
 
         synchronized (lock) {
             updateTransformationIfNeeded();
+            List<Map<String, String>> faceList = new ArrayList<>();
+            ;
 
             for (Graphic graphic : graphics) {
                 graphic.draw(canvas);
-                eventListener.onGraphicOverlay(graphic.getLiveFrame());
+                if (graphic.getLiveFrame() != null) {
+                    eventListener.onGraphicOverlay(graphic.getLiveFrame());
+                }
+                if (graphic.getFaceFrame() != null) {
+                    faceList.add(graphic.getFaceFrame());
+                }
             }
+            eventListener.onFaceGraphic(faceList);
         }
     }
 
@@ -260,6 +269,8 @@ public class GraphicOverlay extends View {
 
     public interface GraphicOverlayListener {
         void onGraphicOverlay(Map<String, Object> liveFrame);
+
+        void onFaceGraphic(List<Map<String, String>> faceList);
     }
 
     public void setEventListener(GraphicOverlayListener listener) {
