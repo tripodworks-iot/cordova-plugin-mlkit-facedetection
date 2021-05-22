@@ -67,8 +67,6 @@ public class LivePreviewActivity extends Fragment implements GraphicOverlay.Grap
 
     public interface LivePreviewActivityListener {
         void onLiveFrame(JSONObject liveFrame);
-
-        void onFaceFrame(JSONObject faceFrame);
     }
 
     public void setEventListener(LivePreviewActivityListener listener) {
@@ -97,25 +95,29 @@ public class LivePreviewActivity extends Fragment implements GraphicOverlay.Grap
         return cameraSource;
     }
 
-    public void onGraphicOverlay(Map<String, Object> liveFrame) {
-        if (liveFrame == null) {
+    public void onImageFrame(Map<String, Object> imageFrame) {
+        if (imageFrame == null) {
             return;
         }
-        JSONObject json = new JSONObject(liveFrame);
+        Map<String, Object> data = new HashMap<>();
+        data.put("type", "image");
+        data.put("data", imageFrame);
+
+        JSONObject json = new JSONObject(data);
         this.eventListener.onLiveFrame(json);
     }
 
-    public void onFaceGraphic(List<Map<String, String>> faceList) {
-        if (faceList == null) {
+    public void onFaceFrame(List<Map<String, String>> faceFrame) {
+        if (faceFrame == null) {
             return;
         }
 
         Map<String, Object> data = new HashMap<>();
         data.put("type", "face");
-        data.put("data", faceList);
+        data.put("data", faceFrame);
 
         JSONObject json = new JSONObject(data);
-        this.eventListener.onFaceFrame(json);
+        this.eventListener.onLiveFrame(json);
     }
 
     private void createCameraPreview() {

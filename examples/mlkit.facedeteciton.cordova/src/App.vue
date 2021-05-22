@@ -98,7 +98,8 @@ export default {
         minFaceSize: 0.5,
         landmark:true,
         classification:true,
-        faceTrack:false,
+        contour: true,
+        faceTrack:true,
       };
       window.faceDetection.start(options, this.successCallback, this.errorCallback);
     },
@@ -106,7 +107,7 @@ export default {
     successCallback(result){
       //this.$log.debug('[face]successCallback result=' + JSON.stringify(result));
       this.isCameraStart = true;
-      if(result.type === 'frame'){
+      if(result.type === 'image'){
         this.liveFrame = result.data;
       }
       if(result.type === 'face'){
@@ -124,8 +125,8 @@ export default {
       window.faceDetection.stop(this.successCallback, this.errorCallback);
       const me = this;
       setTimeout(function(){
-              me.isCameraStart = false;
-      }, 300);
+        me.isCameraStart = false;
+      }, 500);
     }
   },
   mounted: function() {

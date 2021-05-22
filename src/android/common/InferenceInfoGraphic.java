@@ -98,17 +98,12 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
 
     private void setLiveFrame() {
         drawFrame = new HashMap<>();
-
-        Map<String, String> data = new HashMap<>();
-        data.put("imageSize", overlay.getImageHeight() + "x" + overlay.getImageWidth());
+        drawFrame.put("imageSize", overlay.getImageHeight() + "x" + overlay.getImageWidth());
         if (framesPerSecond != null) {
-            data.put("framesPerSecond", framesPerSecond + "");
+            drawFrame.put("framesPerSecond", framesPerSecond + "");
         }
-        data.put("frameLatency", frameLatency + "");
-        data.put("detectorLatency", detectorLatency + "");
-
-        drawFrame.put("type", "frame");
-        drawFrame.put("data", data);
+        drawFrame.put("frameLatency", frameLatency + "");
+        drawFrame.put("detectorLatency", detectorLatency + "");
     }
 
     @Override

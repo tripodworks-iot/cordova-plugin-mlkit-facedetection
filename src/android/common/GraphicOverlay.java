@@ -250,27 +250,26 @@ public class GraphicOverlay extends View {
         synchronized (lock) {
             updateTransformationIfNeeded();
             List<Map<String, String>> faceList = new ArrayList<>();
-            ;
 
             for (Graphic graphic : graphics) {
                 graphic.draw(canvas);
                 if (graphic.getLiveFrame() != null) {
-                    eventListener.onGraphicOverlay(graphic.getLiveFrame());
+                    eventListener.onImageFrame(graphic.getLiveFrame());
                 }
                 if (graphic.getFaceFrame() != null) {
                     faceList.add(graphic.getFaceFrame());
                 }
             }
-            eventListener.onFaceGraphic(faceList);
+            eventListener.onFaceFrame(faceList);
         }
     }
 
     private GraphicOverlayListener eventListener;
 
     public interface GraphicOverlayListener {
-        void onGraphicOverlay(Map<String, Object> liveFrame);
+        void onImageFrame(Map<String, Object> imageFrame);
 
-        void onFaceGraphic(List<Map<String, String>> faceList);
+        void onFaceFrame(List<Map<String, String>> faceFrame);
     }
 
     public void setEventListener(GraphicOverlayListener listener) {
