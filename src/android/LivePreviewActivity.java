@@ -31,6 +31,7 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Map;
 
 import jp.co.tripodw.iot.facedetection.common.CameraSource;
 import jp.co.tripodw.iot.facedetection.common.CameraSourcePreview;
@@ -43,7 +44,7 @@ import jp.co.tripodw.iot.facedetection.preference.PreferenceUtils;
 /**
  * Live preview demo for ML Kit APIs.
  */
-public class LivePreviewActivity extends Fragment {
+public class LivePreviewActivity extends Fragment implements GraphicOverlay.GraphicOverlayListener {
     private static final String TAG = "LivePreviewActivity";
 
     private CameraSource cameraSource = null;
@@ -59,6 +60,16 @@ public class LivePreviewActivity extends Fragment {
     private View view;
     private FrameLayout frameContainerLayout;
     private Boolean front;
+
+    private LivePreviewActivityListener eventListener;
+
+    public interface LivePreviewActivityListener {
+        void onLiveFrame(JSONObject liveFrame);
+    }
+
+    public void setEventListener(LivePreviewActivityListener listener) {
+        this.eventListener = listener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +93,14 @@ public class LivePreviewActivity extends Fragment {
         return cameraSource;
     }
 
+    public void onGraphicOverlay(Map<String, Object> liveFrame) {
+        if (liveFrame == null) {
+            return;
+        }
+        JSONObject json = new JSONObject(liveFrame);
+        this.eventListener.onLiveFrame(json);
+    }
+
     private void createCameraPreview() {
         if (preview != null) {
             return;
@@ -95,6 +114,7 @@ public class LivePreviewActivity extends Fragment {
 
         preview = view.findViewById(getResources().getIdentifier("preview_view", "id", appResourcesPackage));
         graphicOverlay = view.findViewById(getResources().getIdentifier("graphic_overlay", "id", appResourcesPackage));
+        graphicOverlay.setEventListener(this);
 
         createCameraSource();
     }

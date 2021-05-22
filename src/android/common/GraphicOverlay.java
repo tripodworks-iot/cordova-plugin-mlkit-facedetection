@@ -26,6 +26,7 @@ import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview
@@ -139,6 +140,9 @@ public class GraphicOverlay extends View {
         public void postInvalidate() {
             overlay.postInvalidate();
         }
+
+        public abstract Map<String, Object> getLiveFrame();
+
     }
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
@@ -247,7 +251,18 @@ public class GraphicOverlay extends View {
 
             for (Graphic graphic : graphics) {
                 graphic.draw(canvas);
+                eventListener.onGraphicOverlay(graphic.getLiveFrame());
             }
         }
+    }
+
+    private GraphicOverlayListener eventListener;
+
+    public interface GraphicOverlayListener {
+        void onGraphicOverlay(Map<String, Object> liveFrame);
+    }
+
+    public void setEventListener(GraphicOverlayListener listener) {
+        this.eventListener = listener;
     }
 }

@@ -27,6 +27,7 @@ import com.google.mlkit.vision.face.FaceLandmark;
 import com.google.mlkit.vision.face.FaceLandmark.LandmarkType;
 
 import java.util.Locale;
+import java.util.Map;
 
 import jp.co.tripodw.iot.facedetection.common.GraphicOverlay;
 import jp.co.tripodw.iot.facedetection.common.GraphicOverlay.Graphic;
@@ -259,6 +260,11 @@ public class FaceGraphic extends Graphic {
         drawFaceLandmark(canvas, FaceLandmark.RIGHT_EYE);
         drawFaceLandmark(canvas, FaceLandmark.LEFT_CHEEK);
         drawFaceLandmark(canvas, FaceLandmark.RIGHT_CHEEK);
+    }
+
+    @Override
+    public Map<String, Object> getLiveFrame() {
+        return null;
     }
 
     private void drawFaceLandmark(Canvas canvas, @LandmarkType int landmarkType) {

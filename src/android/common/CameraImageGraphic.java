@@ -19,6 +19,8 @@ package jp.co.tripodw.iot.facedetection.common;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import java.util.Map;
+
 import jp.co.tripodw.iot.facedetection.common.GraphicOverlay.Graphic;
 
 /**
@@ -36,5 +38,10 @@ public class CameraImageGraphic extends Graphic {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, getTransformationMatrix(), null);
+    }
+
+    @Override
+    public Map<String, Object> getLiveFrame() {
+        return null;
     }
 }

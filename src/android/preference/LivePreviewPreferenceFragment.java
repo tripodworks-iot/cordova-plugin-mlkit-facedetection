@@ -85,8 +85,8 @@ public class LivePreviewPreferenceFragment {
         setUpCameraPreviewSize(cameraSize, CameraSource.CAMERA_FACING_FRONT);
     }
 
-    public static Boolean getLiveCanvas() {
-        return (Boolean) PreferenceUtils.getParam("liveCanvas");
+    public static boolean getShowFrame() {
+        return (Boolean) PreferenceUtils.getParam("showFrame");
     }
 
     private static void setUpCameraPreviewSize(String cameraSize, int cameraId) {

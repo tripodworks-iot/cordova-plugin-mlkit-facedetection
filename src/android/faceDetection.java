@@ -19,7 +19,7 @@ import org.json.JSONObject;
 /**
  * This class face detection called from JavaScript.
  */
-public class faceDetection extends CordovaPlugin {
+public class faceDetection extends CordovaPlugin implements LivePreviewActivity.LivePreviewActivityListener {
     private static final String TAG = "faceDetection";
 
     private static final String[] permissions = {
@@ -110,6 +110,7 @@ public class faceDetection extends CordovaPlugin {
 
         this.fragment = new LivePreviewActivity();
         fragment.setCameraParams(params, metrics);
+        fragment.setEventListener(this);
         this.startCameraThread(fragment);
     }
 
@@ -169,6 +170,13 @@ public class faceDetection extends CordovaPlugin {
                 fragment.startCameraSource();
             }
         });
+    }
+
+    public void onLiveFrame(JSONObject liveFrame) {
+        //Log.d(TAG, "onLiveFrame:" + liveFrame.toString());
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, liveFrame);
+        pluginResult.setKeepCallback(true);
+        this.execCallback.sendPluginResult(pluginResult);
     }
 
     private void startCameraX(JSONObject params, CallbackContext callbackContext) {

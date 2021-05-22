@@ -47,8 +47,7 @@ public class PreferenceUtils {
         cameraParam.put("performanceMode", FaceDetectorOptions.PERFORMANCE_MODE_FAST);
         cameraParam.put("faceTrackMode", false);
         cameraParam.put("minFaceSize", 0.1f);
-
-        cameraParam.put("liveCanvas", true);
+        cameraParam.put("showFrame", false);
 
         cameraParam.put("frontSize", "640x480");
         cameraParam.put("backSize", "640x480");

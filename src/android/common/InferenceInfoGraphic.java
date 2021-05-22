@@ -22,6 +22,9 @@ import android.graphics.Paint;
 
 import androidx.annotation.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jp.co.tripodw.iot.facedetection.preference.LivePreviewPreferenceFragment;
 
 /**
@@ -37,6 +40,8 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
     private final GraphicOverlay overlay;
     private final long frameLatency;
     private final long detectorLatency;
+
+    public Map<String, Object> drawFrame;
 
     // Only valid when a stream of input images is being processed. Null for single image mode.
     @Nullable
@@ -61,10 +66,8 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
 
     @Override
     public synchronized void draw(Canvas canvas) {
-
-        boolean isDraw = LivePreviewPreferenceFragment.getLiveCanvas();
-//        Log.i(TAG, "getLiveCanvas'" + isDraw);
-        if (!isDraw) {
+        setLiveFrame();
+        if (!LivePreviewPreferenceFragment.getShowFrame()) {
             return;
         }
 
@@ -91,5 +94,25 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
             canvas.drawText(
                     "Detector latency: " + detectorLatency + " ms", x, y + TEXT_SIZE * 2, textPaint);
         }
+    }
+
+    private void setLiveFrame() {
+        drawFrame = new HashMap<>();
+
+        Map<String, String> data = new HashMap<>();
+        data.put("imageSize", overlay.getImageHeight() + "x" + overlay.getImageWidth());
+        if (framesPerSecond != null) {
+            data.put("framesPerSecond", framesPerSecond + "");
+        }
+        data.put("frameLatency", frameLatency + "");
+        data.put("detectorLatency", detectorLatency + "");
+
+        drawFrame.put("type", "frame");
+        drawFrame.put("data", data);
+    }
+
+    @Override
+    public synchronized Map<String, Object> getLiveFrame() {
+        return drawFrame;
     }
 }
