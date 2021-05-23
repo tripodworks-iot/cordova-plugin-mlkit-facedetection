@@ -20,10 +20,16 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -31,9 +37,12 @@ import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.google.android.gms.common.images.Size;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -117,6 +126,8 @@ public class CameraSource {
      * identity ('==') check on the keys.
      */
     private final IdentityHashMap<byte[], ByteBuffer> bytesToByteBuffer = new IdentityHashMap<>();
+
+    private int currentQuality;
 
     public CameraSource(Activity activity, GraphicOverlay overlay) {
         this.activity = activity;
@@ -722,5 +733,187 @@ public class CameraSource {
      */
     private void cleanScreen() {
         graphicOverlay.clear();
+    }
+
+    ShutterCallback shutterCallback = new ShutterCallback() {
+        public void onShutter() {
+            // do nothing, availabilty of this callback causes default system shutter sound to work
+        }
+    };
+
+    private boolean canTakePicture = true;
+
+    public void takePicture(int width, int height, int quality) {
+        if (!canTakePicture) {
+            Log.e(TAG, "takePicture: canTakePicture is false");
+            return;
+        }
+
+        canTakePicture = false;
+
+        Camera.Parameters params = camera.getParameters();
+
+        Camera.Size size = getOptimalPictureSize(width, height, params.getPreviewSize(), params.getSupportedPictureSizes());
+        params.setPictureSize(size.width, size.height);
+        currentQuality = quality;
+
+        int requestedCameraId = getIdForRequestedCamera(facing);
+        if (requestedCameraId == CameraInfo.CAMERA_FACING_FRONT) {
+            // The image will be recompressed in the callback
+            params.setJpegQuality(99);
+        } else {
+            params.setJpegQuality(quality);
+        }
+
+        setRotation(camera, params, requestedCameraId);
+        camera.setParameters(params);
+        camera.takePicture(shutterCallback, null, jpegPictureCallback);
+    }
+
+    private Camera.Size getOptimalPictureSize(final int width, final int height, final Camera.Size previewSize, final List<Camera.Size> supportedSizes) {
+    /*
+      get the supportedPictureSize that:
+      - matches exactly width and height
+      - has the closest aspect ratio to the preview aspect ratio
+      - has picture.width and picture.height closest to width and height
+      - has the highest supported picture width and height up to 2 Megapixel if width == 0 || height == 0
+    */
+        Camera.Size size = camera.new Size(width, height);
+
+        // convert to landscape if necessary
+        if (size.width < size.height) {
+            int temp = size.width;
+            size.width = size.height;
+            size.height = temp;
+        }
+
+        Camera.Size requestedSize = camera.new Size(size.width, size.height);
+
+        double previewAspectRatio = (double) previewSize.width / (double) previewSize.height;
+
+        if (previewAspectRatio < 1.0) {
+            // reset ratio to landscape
+            previewAspectRatio = 1.0 / previewAspectRatio;
+        }
+
+        Log.d(TAG, "CameraPreview previewAspectRatio " + previewAspectRatio);
+
+        double aspectTolerance = 0.1;
+        double bestDifference = Double.MAX_VALUE;
+
+        for (int i = 0; i < supportedSizes.size(); i++) {
+            Camera.Size supportedSize = supportedSizes.get(i);
+
+            // Perfect match
+            if (supportedSize.equals(requestedSize)) {
+                Log.d(TAG, "CameraPreview optimalPictureSize " + supportedSize.width + 'x' + supportedSize.height);
+                return supportedSize;
+            }
+
+            double difference = Math.abs(previewAspectRatio - ((double) supportedSize.width / (double) supportedSize.height));
+
+            if (difference < bestDifference - aspectTolerance) {
+                // better aspectRatio found
+                if ((width != 0 && height != 0) || (supportedSize.width * supportedSize.height < 2048 * 1024)) {
+                    size.width = supportedSize.width;
+                    size.height = supportedSize.height;
+                    bestDifference = difference;
+                }
+            } else if (difference < bestDifference + aspectTolerance) {
+                // same aspectRatio found (within tolerance)
+                if (width == 0 || height == 0) {
+                    // set highest supported resolution below 2 Megapixel
+                    if ((size.width < supportedSize.width) && (supportedSize.width * supportedSize.height < 2048 * 1024)) {
+                        size.width = supportedSize.width;
+                        size.height = supportedSize.height;
+                    }
+                } else {
+                    // check if this pictureSize closer to requested width and height
+                    if (Math.abs(width * height - supportedSize.width * supportedSize.height) < Math.abs(width * height - size.width * size.height)) {
+                        size.width = supportedSize.width;
+                        size.height = supportedSize.height;
+                    }
+                }
+            }
+        }
+        Log.d(TAG, "CameraPreview optimalPictureSize " + size.width + 'x' + size.height);
+        return size;
+    }
+
+    PictureCallback jpegPictureCallback = new PictureCallback() {
+        public void onPictureTaken(byte[] data, Camera arg1) {
+            Log.d(TAG, "CameraPreview jpegPictureCallback");
+            int requestedCameraId = getIdForRequestedCamera(facing);
+
+            try {
+                Matrix matrix = new Matrix();
+                if (requestedCameraId == CameraInfo.CAMERA_FACING_FRONT) {
+                    matrix.preScale(1.0f, -1.0f);
+                }
+
+                ExifInterface exifInterface = new ExifInterface(new ByteArrayInputStream(data));
+                int rotation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int rotationInDegrees = exifToDegrees(rotation);
+
+                if (rotation != 0f) {
+                    matrix.preRotate(rotationInDegrees);
+                }
+
+                // Check if matrix has changed. In that case, apply matrix and override data
+                if (!matrix.isIdentity()) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    bitmap = applyMatrix(bitmap, matrix);
+
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, currentQuality, outputStream);
+                    data = outputStream.toByteArray();
+                }
+
+                String encodedImage = Base64.encodeToString(data, Base64.NO_WRAP);
+                eventListener.onPictureTaken(encodedImage);
+
+                Log.d(TAG, "CameraPreview pictureTakenHandler called back");
+            } catch (OutOfMemoryError e) {
+                // most likely failed to allocate memory for rotateBitmap
+                Log.d(TAG, "CameraPreview OutOfMemoryError");
+                // failed to allocate memory
+                eventListener.onPictureTakenError("Picture too large (memory)");
+            } catch (IOException e) {
+                Log.d(TAG, "CameraPreview IOException");
+                eventListener.onPictureTakenError("IO Error when extracting exif");
+            } catch (Exception e) {
+                Log.d(TAG, "CameraPreview onPictureTaken general exception");
+            } finally {
+                canTakePicture = true;
+                camera.startPreview();
+            }
+        }
+    };
+
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+    public static Bitmap applyMatrix(Bitmap source, Matrix matrix) {
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    private CameraSourceListener eventListener;
+
+    public interface CameraSourceListener {
+        void onPictureTaken(String originalPicture);
+
+        void onPictureTakenError(String message);
+    }
+
+    public void setEventListener(CameraSource.CameraSourceListener listener) {
+        this.eventListener = listener;
     }
 }

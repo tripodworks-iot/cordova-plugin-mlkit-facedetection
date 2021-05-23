@@ -11,13 +11,12 @@
       </div>
 
       <section style="margin-top: 10px; padding:5px; text-align: left;">
-        <v-ons-button modifier="large" @click="goStartFaceDetection()">start</v-ons-button>
+        <v-ons-button modifier="large" @click="goFaceDetection()">{{startBunText}}</v-ons-button>
       </section>
       <section style="margin-top: 5px; padding:5px;text-align: left;">
-        <v-ons-button modifier="large" @click="goStopFaceDetection()">stop</v-ons-button>
+        <v-ons-button modifier="large" @click="goStopFaceDetection()">Stop</v-ons-button>
       </section>
 
-      <div v-show="isCameraStart" style="margin-top: 10px; text-align: left;">
         <div style="padding-left:5px;">
             <b>live frame information</b>
         </div>
@@ -78,8 +77,47 @@ export default {
       faceList: [],
     }
   },
+
+  computed: {
+    startBunText: function () {
+      if (this.isCameraStart && this.liveFrame.imageSize != '') {
+        return 'Take picture';
+      } else {
+        return 'Start';
+      }
+    },
+  },
+
   methods: {
-    goStartFaceDetection(){
+    goFaceDetection(){
+      const text = this.startBunText;
+      this.$log.debug('[face]goFaceDetection text=' + text);
+
+      if(text == 'Start'){
+        this.startFaceDetection();
+      }else{
+        this.takePicture();
+      }
+    },
+
+    takePicture(){
+      this.$log.debug('[face]takePicture call');
+      const options = {
+        width: 360,
+        height: 480,
+        quality: 85,
+      };
+      window.faceDetection.takePicture(options, this.takeSuccessCallback, this.errorCallback);
+      this.isCameraStart = true;
+    },
+
+    takeSuccessCallback(result){
+      this.$log.debug('[face]takeSuccessCallback result=' + JSON.stringify(result));
+      const image = 'data:image/png;base64,' + result;
+      this.goStopFaceDetection(image);
+    },
+
+    startFaceDetection(){
       this.$log.debug('[face]goStartFaceDetection call');
 
       const cameraDiv = document.getElementById('cameraDivID');
@@ -98,7 +136,7 @@ export default {
         minFaceSize: 0.5,
         landmark:true,
         classification:true,
-        contour: true,
+        contour: false,
         faceTrack:true,
       };
       window.faceDetection.start(options, this.successCallback, this.errorCallback);
@@ -121,11 +159,15 @@ export default {
       alert('error:' + result);
     },
 
-    goStopFaceDetection(){
+    goStopFaceDetection(image=null){
       this.$log.debug('[face]goStopFaceDetection call');
-      window.faceDetection.stop(this.successCallback, this.errorCallback);
       this.isCameraStart = false;
-      this.imageStyle.backgroundImage = 'url(' + bgImage + ')';
+      let data = bgImage;
+      if(image){
+        data = image;
+      }
+      this.imageStyle.backgroundImage = 'url(' + data + ')';
+      window.faceDetection.stop(this.successCallback, this.errorCallback);
     }
   },
   mounted: function() {

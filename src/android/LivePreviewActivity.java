@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ import jp.co.tripodw.iot.facedetection.preference.PreferenceUtils;
 /**
  * Live preview demo for ML Kit APIs.
  */
-public class LivePreviewActivity extends Fragment implements GraphicOverlay.GraphicOverlayListener {
+public class LivePreviewActivity extends Fragment implements GraphicOverlay.GraphicOverlayListener, CameraSource.CameraSourceListener {
     private static final String TAG = "LivePreviewActivity";
 
     private CameraSource cameraSource = null;
@@ -67,6 +68,10 @@ public class LivePreviewActivity extends Fragment implements GraphicOverlay.Grap
 
     public interface LivePreviewActivityListener {
         void onLiveFrame(JSONObject liveFrame);
+
+        void onPicture(JSONArray picture);
+
+        void onPictureError(String message);
     }
 
     public void setEventListener(LivePreviewActivityListener listener) {
@@ -142,6 +147,7 @@ public class LivePreviewActivity extends Fragment implements GraphicOverlay.Grap
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
             cameraSource = new CameraSource(getActivity(), graphicOverlay);
+            cameraSource.setEventListener(this);
         }
 
         if (front) {
@@ -279,5 +285,36 @@ public class LivePreviewActivity extends Fragment implements GraphicOverlay.Grap
         if (cameraSource != null) {
             cameraSource.release();
         }
+    }
+
+    public void takePicture(JSONObject options) {
+        int width = options.optInt("width", 480);
+        int height = options.optInt("height", 640);
+        int quality = options.optInt("quality", 50);
+
+        Log.i(TAG, "takePicture width: " + width + ", height: " + height + ", quality: " + quality);
+        if (preview == null) {
+            Log.e(TAG, "takePicture: Preview is null");
+            return;
+        }
+
+        new Thread() {
+            public void run() {
+                cameraSource.takePicture(width, height, quality);
+            }
+        }.start();
+    }
+
+    public void onPictureTaken(String originalPicture) {
+        Log.i(TAG, "returning picture");
+
+        JSONArray data = new JSONArray();
+        data.put(originalPicture);
+        this.eventListener.onPicture(data);
+    }
+
+    public void onPictureTakenError(String message) {
+        Log.e(TAG, "CameraPreview onPictureTakenError");
+        this.eventListener.onPictureError(message);
     }
 }

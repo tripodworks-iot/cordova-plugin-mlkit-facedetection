@@ -30,42 +30,54 @@ public class faceDetection extends CordovaPlugin implements LivePreviewActivity.
     };
 
     private static final int CAM_REQ_CODE = 1;
-    private CallbackContext execCallback;
     private JSONObject execArgs;
     String action;
 
     private LivePreviewActivity fragment;
     private CameraXLivePreviewActivity fragmentx;
 
+    private CallbackContext startCallback;
+    private CallbackContext stopCallback;
+    private CallbackContext takePictureCallback;
+
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.action = action;
-        this.execCallback = callbackContext;
         if (action.equals("start")) {
             Log.d(TAG, "execute start");
+            startCallback = callbackContext;
+
             this.execArgs = args.getJSONObject(0);
             if (this.checkPermissions()) {
-                this.startCamera(this.execArgs, this.execCallback);
+                this.startCamera(this.execArgs, this.startCallback);
             } else {
                 cordova.requestPermissions(this, CAM_REQ_CODE, permissions);
             }
             return true;
         } else if (action.equals("stop")) {
             Log.d(TAG, "execute stop");
-            this.stopCamera(this.execCallback);
+            stopCallback = callbackContext;
+            this.stopCamera(this.stopCallback);
             return true;
         } else if (action.equals("startX")) {
             Log.d(TAG, "execute start");
+            startCallback = callbackContext;
             this.execArgs = args.getJSONObject(0);
             if (this.checkPermissions()) {
-                this.startCameraX(this.execArgs, this.execCallback);
+                this.startCameraX(this.execArgs, this.startCallback);
             } else {
                 cordova.requestPermissions(this, CAM_REQ_CODE, permissions);
             }
             return true;
         } else if (action.equals("stopX")) {
             Log.d(TAG, "execute stop");
-            this.stopCameraX(this.execCallback);
+            stopCallback = callbackContext;
+            this.stopCameraX(this.stopCallback);
+            return true;
+        } else if (action.equals("takePicture")) {
+            Log.d(TAG, "execute takePicture");
+            takePictureCallback = callbackContext;
+            this.takePicture(args.getJSONObject(0), this.takePictureCallback);
             return true;
         }
 
@@ -86,16 +98,16 @@ public class faceDetection extends CordovaPlugin implements LivePreviewActivity.
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
         for (int r : grantResults) {
             if (r == PackageManager.PERMISSION_DENIED) {
-                execCallback.sendPluginResult(new PluginResult(PluginResult.Status.ILLEGAL_ACCESS_EXCEPTION));
+                startCallback.sendPluginResult(new PluginResult(PluginResult.Status.ILLEGAL_ACCESS_EXCEPTION));
                 return;
             }
         }
 
         if (requestCode == CAM_REQ_CODE) {
             if (action.equals("start")) {
-                this.startCamera(this.execArgs, this.execCallback);
+                this.startCamera(this.execArgs, this.startCallback);
             } else {
-                this.startCameraX(this.execArgs, this.execCallback);
+                this.startCameraX(this.execArgs, this.startCallback);
             }
         }
     }
@@ -182,7 +194,7 @@ public class faceDetection extends CordovaPlugin implements LivePreviewActivity.
         //Log.d(TAG, "onLiveFrame:" + liveFrame.toString());
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, liveFrame);
         pluginResult.setKeepCallback(true);
-        this.execCallback.sendPluginResult(pluginResult);
+        this.startCallback.sendPluginResult(pluginResult);
     }
 
     private void startCameraX(JSONObject params, CallbackContext callbackContext) {
@@ -234,5 +246,27 @@ public class faceDetection extends CordovaPlugin implements LivePreviewActivity.
                 fragmentx.stopCamera();
             }
         });
+    }
+
+
+    private void takePicture(JSONObject params, CallbackContext callbackContext) {
+        if (this.fragment == null) {
+            callbackContext.error("camera no started!");
+            return;
+        }
+        fragment.takePicture(params);
+    }
+
+    public void onPicture(JSONArray data) {
+        Log.d(TAG, "returning picture");
+
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, data);
+        pluginResult.setKeepCallback(false);
+        takePictureCallback.sendPluginResult(pluginResult);
+    }
+
+    public void onPictureError(String message) {
+        Log.d(TAG, "CameraPreview onPictureTakenError");
+        takePictureCallback.error(message);
     }
 }

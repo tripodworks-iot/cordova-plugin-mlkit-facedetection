@@ -9,6 +9,10 @@ faceDetection.prototype.stop = function(success, error) {
   exec(success, error, "faceDetection", "stop", []);
 };
 
+faceDetection.prototype.takePicture = function(param, success, error) {
+  exec(success, error, "faceDetection", "takePicture", [param]);
+};
+
 faceDetection.prototype.startX = function(param, success, error) {
   exec(success, error, "faceDetection", "startX", [param]);
 };
