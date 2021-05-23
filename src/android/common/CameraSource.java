@@ -508,6 +508,8 @@ public class CameraSource {
         WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
         int degrees = 0;
         int rotation = windowManager.getDefaultDisplay().getRotation();
+        Log.i(TAG, "setRotation value: " + rotation);
+
         switch (rotation) {
             case Surface.ROTATION_0:
                 degrees = 0;
@@ -763,7 +765,7 @@ public class CameraSource {
             params.setJpegQuality(quality);
         }
 
-        setRotation(camera, params, requestedCameraId);
+        params.setRotation(90);
         camera.setParameters(params);
         camera.takePicture(shutterCallback, null, jpegPictureCallback);
     }
@@ -843,6 +845,8 @@ public class CameraSource {
             Log.d(TAG, "CameraPreview jpegPictureCallback");
             int requestedCameraId = getIdForRequestedCamera(facing);
 
+            Log.i(TAG, "Callback rotation requestedCameraId: " + requestedCameraId);
+
             try {
                 Matrix matrix = new Matrix();
                 if (requestedCameraId == CameraInfo.CAMERA_FACING_FRONT) {
@@ -852,6 +856,9 @@ public class CameraSource {
                 ExifInterface exifInterface = new ExifInterface(new ByteArrayInputStream(data));
                 int rotation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
                 int rotationInDegrees = exifToDegrees(rotation);
+
+                Log.i(TAG, "rotation value: " + rotation);
+                Log.i(TAG, "rotationInDegrees value: " + rotationInDegrees);
 
                 if (rotation != 0f) {
                     matrix.preRotate(rotationInDegrees);
