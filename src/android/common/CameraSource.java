@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Google LLC. All rights reserved.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -67,7 +65,7 @@ public class CameraSource {
     public static final int DEFAULT_REQUESTED_CAMERA_PREVIEW_WIDTH = 480;
     public static final int DEFAULT_REQUESTED_CAMERA_PREVIEW_HEIGHT = 360;
 
-    private static final String TAG = "MIDemoApp:CameraSource";
+    private static final String TAG = "CameraSource";
 
     /**
      * The dummy surface texture must be assigned a chosen name. Since we never use an OpenGL context,
@@ -909,7 +907,6 @@ public class CameraSource {
 
     public interface CameraSourceListener {
         void onPictureTaken(String originalPicture);
-
         void onPictureTakenError(String message);
     }
 

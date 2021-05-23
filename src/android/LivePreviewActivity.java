@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Google LLC. All rights reserved.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -45,9 +43,11 @@ import jp.co.tripodw.iot.facedetection.preference.PreferenceUtils;
 
 
 /**
- * Live preview demo for ML Kit APIs.
+ * Live preview for ML Kit APIs.
  */
-public class LivePreviewActivity extends Fragment implements GraphicOverlay.GraphicOverlayListener, CameraSource.CameraSourceListener {
+public class LivePreviewActivity extends Fragment
+        implements GraphicOverlay.GraphicOverlayListener,
+        CameraSource.CameraSourceListener {
     private static final String TAG = "LivePreviewActivity";
 
     private CameraSource cameraSource = null;

@@ -17,6 +17,7 @@
         <v-ons-button modifier="large" @click="goStopFaceDetection()">Stop</v-ons-button>
       </section>
 
+      <div v-show="isCameraStart && liveFrame.imageSize != ''" style="margin-top: 10px; text-align: left;">
         <div style="padding-left:5px;">
             <b>live frame information</b>
         </div>
