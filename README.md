@@ -101,6 +101,16 @@ If result.type is 'face', data type is List, list item type is Json, json values
   };
 
   faceDetection.start(options, function(result) {
+    const data = result.data;
+    if(result.type == 'image') {
+      // get live frame information
+       console.log(JSON.stringify(data));
+    }else {
+      // get face frame information
+      data.forEach(function(face)){
+        console.log(JSON.stringify(face));
+      });
+    }
   });
 ```
 
