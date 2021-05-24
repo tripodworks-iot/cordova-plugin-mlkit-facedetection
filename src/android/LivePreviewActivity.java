@@ -112,7 +112,7 @@ public class LivePreviewActivity extends Fragment
         this.eventListener.onLiveFrame(json);
     }
 
-    public void onFaceFrame(List<Map<String, String>> faceFrame) {
+    public void onFaceFrame(List<Map<String, Object>> faceFrame) {
         if (faceFrame == null) {
             return;
         }
@@ -202,8 +202,8 @@ public class LivePreviewActivity extends Fragment
         this.setRect(params, metrics);
 
         // カメラサイズ設定
-        String cameraSize = params.optString("cameraSize", "640x480");
-        LivePreviewPreferenceFragment.setUpCameraSize(cameraSize);
+        String cameraPixel = params.optString("cameraPixel", "640x480");
+        LivePreviewPreferenceFragment.setCameraPixel(cameraPixel);
 
         boolean enableViewport = params.optBoolean("viewport", true);
         Log.i(TAG, "viewportEnable:" + enableViewport);

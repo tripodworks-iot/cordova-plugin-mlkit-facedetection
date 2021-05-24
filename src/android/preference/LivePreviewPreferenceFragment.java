@@ -74,20 +74,20 @@ public class LivePreviewPreferenceFragment {
         PreferenceUtils.saveParam("faceTrackMode", value);
     }
 
-    public static void setUpCameraSize(String cameraSize) {
+    public static void setCameraPixel(String cameraPixel) {
 
         Log.i(TAG, "previewSize start for CAMERA_FACING_BACK");
-        setUpCameraPreviewSize(cameraSize, CameraSource.CAMERA_FACING_BACK);
+        setUpCameraPreviewSize(cameraPixel, CameraSource.CAMERA_FACING_BACK);
 
         Log.i(TAG, "previewSize start for CAMERA_FACING_FRONT");
-        setUpCameraPreviewSize(cameraSize, CameraSource.CAMERA_FACING_FRONT);
+        setUpCameraPreviewSize(cameraPixel, CameraSource.CAMERA_FACING_FRONT);
     }
 
     public static boolean getShowFrame() {
         return (Boolean) PreferenceUtils.getParam("showFrame");
     }
 
-    private static void setUpCameraPreviewSize(String cameraSize, int cameraId) {
+    private static void setUpCameraPreviewSize(String cameraPixel, int cameraId) {
         Camera camera = null;
         try {
             camera = Camera.open(cameraId);
@@ -97,12 +97,12 @@ public class LivePreviewPreferenceFragment {
             for (SizePair sizePair : previewSizeList) {
                 String support = sizePair.preview.toString();
                 Log.i(TAG, "previewSize=" + support);
-                if (cameraSize.equals(support) && cameraId == CameraSource.CAMERA_FACING_BACK) {
+                if (cameraPixel.equals(support) && cameraId == CameraSource.CAMERA_FACING_BACK) {
                     PreferenceUtils.saveParam("backSize", support);
                     break;
                 }
 
-                if (cameraSize.equals(support) && cameraId == CameraSource.CAMERA_FACING_FRONT) {
+                if (cameraPixel.equals(support) && cameraId == CameraSource.CAMERA_FACING_FRONT) {
                     PreferenceUtils.saveParam("frontSize", support);
                     break;
                 }

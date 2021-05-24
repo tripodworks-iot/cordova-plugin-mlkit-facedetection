@@ -63,8 +63,6 @@ public class FaceGraphic extends Graphic {
 
     private volatile Face face;
 
-    private Map<String, String> FaceFrame;
-
     FaceGraphic(GraphicOverlay overlay, Face face) {
         super(overlay);
 
@@ -265,40 +263,38 @@ public class FaceGraphic extends Graphic {
         drawFaceLandmark(canvas, FaceLandmark.RIGHT_CHEEK);
     }
 
+    private Map<String, Object> FaceFrame;
+
     private void setFaceFrame(Face face) {
         FaceFrame = new HashMap<>();
 
-        if (face.getTrackingId() == null) {
-            FaceFrame.put("id", "");
-        } else {
-            FaceFrame.put("id", face.getTrackingId() + "");
+        FaceFrame.put("id", 0);
+        if (face.getTrackingId() != null) {
+            FaceFrame.put("id", face.getTrackingId());
         }
 
-        if (face.getSmilingProbability() == null) {
-            FaceFrame.put("smiling", "");
-        } else {
-            FaceFrame.put("smiling", String.format(Locale.US, "%.2f", face.getSmilingProbability()));
+        FaceFrame.put("smiling", 0);
+        if (face.getSmilingProbability() != null) {
+            FaceFrame.put("smiling", face.getSmilingProbability());
         }
 
-        if (face.getLeftEyeOpenProbability() == null) {
-            FaceFrame.put("leftEyeOpen", "");
-        } else {
-            FaceFrame.put("leftEyeOpen", String.format(Locale.US, "%.2f", face.getLeftEyeOpenProbability()));
+        FaceFrame.put("leftEyeOpen", 0);
+        if (face.getLeftEyeOpenProbability() != null) {
+            FaceFrame.put("leftEyeOpen", face.getLeftEyeOpenProbability());
         }
 
-        if (face.getRightEyeOpenProbability() == null) {
-            FaceFrame.put("rightEyeOpen", "");
-        } else {
-            FaceFrame.put("rightEyeOpen", String.format(Locale.US, "%.2f", face.getRightEyeOpenProbability()));
+        FaceFrame.put("rightEyeOpen", 0);
+        if (face.getRightEyeOpenProbability() != null) {
+            FaceFrame.put("rightEyeOpen", face.getRightEyeOpenProbability());
         }
 
-        FaceFrame.put("eulerX", face.getHeadEulerAngleX() + "");
-        FaceFrame.put("eulerY", face.getHeadEulerAngleY() + "");
-        FaceFrame.put("eulerZ", face.getHeadEulerAngleZ() + "");
+        FaceFrame.put("eulerX", face.getHeadEulerAngleX());
+        FaceFrame.put("eulerY", face.getHeadEulerAngleY());
+        FaceFrame.put("eulerZ", face.getHeadEulerAngleZ());
     }
 
     @Override
-    public Map<String, String> getFaceFrame() {
+    public Map<String, Object> getFaceFrame() {
         return this.FaceFrame;
     }
 

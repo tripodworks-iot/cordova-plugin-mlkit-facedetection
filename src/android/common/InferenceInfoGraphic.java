@@ -39,8 +39,6 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
     private final long frameLatency;
     private final long detectorLatency;
 
-    public Map<String, Object> drawFrame;
-
     // Only valid when a stream of input images is being processed. Null for single image mode.
     @Nullable
     private final Integer framesPerSecond;
@@ -94,14 +92,17 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
         }
     }
 
+    private Map<String, Object> drawFrame;
+
     private void setLiveFrame() {
         drawFrame = new HashMap<>();
         drawFrame.put("imageSize", overlay.getImageHeight() + "x" + overlay.getImageWidth());
+        drawFrame.put("framesPerSecond", 0);
         if (framesPerSecond != null) {
-            drawFrame.put("framesPerSecond", framesPerSecond + "");
+            drawFrame.put("framesPerSecond", framesPerSecond);
         }
-        drawFrame.put("frameLatency", frameLatency + "");
-        drawFrame.put("detectorLatency", detectorLatency + "");
+        drawFrame.put("frameLatency", frameLatency);
+        drawFrame.put("detectorLatency", detectorLatency);
     }
 
     @Override
@@ -110,7 +111,7 @@ public class InferenceInfoGraphic extends GraphicOverlay.Graphic {
     }
 
     @Override
-    public Map<String, String> getFaceFrame() {
+    public Map<String, Object> getFaceFrame() {
         return null;
     }
 }

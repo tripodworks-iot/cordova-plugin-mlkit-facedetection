@@ -914,6 +914,7 @@ public class CameraSource {
 
     public interface CameraSourceListener {
         void onPictureTaken(String originalPicture);
+
         void onPictureTakenError(String message);
     }
 
