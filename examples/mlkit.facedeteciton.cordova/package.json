@@ -1,0 +1,17 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "cordova-android": "^9.1.0",
+    "cordova-plugin-mlkit-facedetection": "git+https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection.git",
+    "cordova-plugin-whitelist": "^1.3.4"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-mlkit-facedetection": {}
+    },
+    "platforms": [
+      "android"
+    ]
+  }
+}
