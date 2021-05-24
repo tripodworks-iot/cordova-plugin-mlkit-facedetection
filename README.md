@@ -7,6 +7,12 @@ Preferences
 
 **Currently available for Android only. Will support iOS in the future.<br> This plugin is under constant development. Releases are being kept up to date when appropriate.**
 
+## Requirements
+<ul>
+  <li>Cordova 9.0.0 or higher</li>
+  <li>Android Cordova library 8.0.0 or higher</li>
+</ul>
+
 ## Features
 
 <ul>
@@ -15,7 +21,7 @@ Preferences
   <li>Take Photos</li>
 </ul>
 
-## Install
+## Installation
 
 ```
 $ cordova plugin add https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection
@@ -69,9 +75,9 @@ If result.type is 'face', data type is List, list item type is Json, json values
 | item | Type | Default | Note |
 | --- | --- | --- | --- |
 | id | int | 0 | the tracking ID if the tracking is enabled.  Only the start option faceTrack is true  |
-| smiling | float | 0 | The probability that the face is smiling(0~1)  |
-| leftEyeOpen | float | 0 | The probability that the face's left eye is open(0~1)  |
-| rightEyeOpen | float | 0 | The probability that the face's right eye is open(0~1)  |
+| smiling | float | 0 | The probability that the face is smiling(0~1). Only the start option classification is true  |
+| leftEyeOpen | float | 0 | The probability that the face's left eye is open(0~1). Only the start option classification is true  |
+| rightEyeOpen | float | 0 | The probability that the face's right eye is open(0~1). Only the start option classification is true  |
 | eulerX | float | 0 | Rotation of the face about the horizontal axis of the image  |
 | eulerY | float | 0 | Rotation of the face about the vertical axis of the image  |
 | eulerZ | float | 0 | Rotation of the face about the axis pointing out of the image  |
@@ -157,4 +163,5 @@ $ npm run cordova-serve-android
 ```
 
 ### Screenshots
-
+<img src="https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection/master/img/android01.png"/>
+<img hspace="20" src="https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection/master/img/android02.png"/>
