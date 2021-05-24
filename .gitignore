@@ -24,11 +24,11 @@ yarn-error.log*
 *.sw?
 
 # Cordova sample app
-/examples/mlkit.facedeteciton.cordova/node_modules
-/examples/mlkit.facedeteciton.cordova/src-cordova/node_modules
-/examples/mlkit.facedeteciton.cordova/src-cordova/platforms
-/examples/mlkit.facedeteciton.cordova/src-cordova/plugins
+/examples/mlkit.facedeteciton.vue.cordova/node_modules
+/examples/mlkit.facedeteciton.vue.cordova/src-cordova/node_modules
+/examples/mlkit.facedeteciton.vue.cordova/src-cordova/platforms
+/examples/mlkit.facedeteciton.vue.cordova/src-cordova/plugins
 
 # Cordova sample app (build config file)
-/examples/mlkit.facedeteciton.cordova/src-cordova/*.keystore
-/examples/mlkit.facedeteciton.cordova/src-cordova/build*
+/examples/mlkit.facedeteciton.vue.cordova/src-cordova/*.keystore
+/examples/mlkit.facedeteciton.vue.cordova/src-cordova/build*

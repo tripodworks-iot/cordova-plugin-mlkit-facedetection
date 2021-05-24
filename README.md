@@ -58,7 +58,6 @@ All options stated are optional and will default to values here.
 | data | Json/List  |  | if result.type is 'image', data type is Json, otherwise，data type is List |
 
 <br>
-int
 If result.type is 'image', data type is Json, values is follow.
 
 | item | Type | Default | Note |
