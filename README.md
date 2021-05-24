@@ -163,5 +163,5 @@ $ npm run cordova-serve-android
 ```
 
 ### Screenshots
-<img src="https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection/master/img/android01.png"/>
-<img hspace="20" src="https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection/master/img/android02.png"/>
+<img src="img/android01.png"/>
+<img hspace="20" src="img/android02.png"/>
