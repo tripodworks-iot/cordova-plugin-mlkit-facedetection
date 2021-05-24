@@ -163,5 +163,5 @@ $ npm run cordova-serve-android
 ```
 
 ### Screenshots
-<img src="img/android01.png"/>
-<img hspace="20" src="img/android02.png"/>
+<img src="https://user-images.githubusercontent.com/50347751/119295757-91a9bf00-bc92-11eb-8b78-7e0f56322900.png"/>
+<img hspace="20" src="https://user-images.githubusercontent.com/50347751/119295761-93738280-bc92-11eb-8940-aa3c80987121.png"/>
