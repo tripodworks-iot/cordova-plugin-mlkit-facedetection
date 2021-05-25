@@ -158,18 +158,8 @@ All options stated are optional and will default to values here.
 ```
 
 ## Sample App
-Execute the following command to start app.
+Sample cordova application <a href="https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection/tree/main/examples/mlkit.facedeteciton.cordova">mlkit.facedeteciton.cordova</a>
 
-```
-$ cd /path/cordova-plugin-mlkit-facedetection/
-$ cd ./examples\mlkit.facedeteciton.cordova
-$ npm install
-$ cd ./src-cordova
-$ npm install
-$ cordova platform add android
-$ cd ..
-$ npm run cordova-serve-android
-```
 
 ### Screenshots
 <img width="200" src="https://user-images.githubusercontent.com/50347751/119295757-91a9bf00-bc92-11eb-8b78-7e0f56322900.png"/><img hspace="30" width="200" src="https://user-images.githubusercontent.com/50347751/119295761-93738280-bc92-11eb-8940-aa3c80987121.png"/>

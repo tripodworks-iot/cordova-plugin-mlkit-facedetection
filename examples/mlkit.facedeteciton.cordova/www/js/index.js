@@ -20,8 +20,13 @@ var app = {
       contour: false,
       faceTrack:true,
     };
+
+    const me = this;
+    document.getElementById('startCameraButton').innerText = 'TAKE PICTURE';
+
     window.faceDetection.start(options, function(result){
       //console.log('start' +JSON.stringify(result));
+
       const data = result.data;
       let htmlText = '';
       if(result.type == 'image'){
@@ -45,7 +50,20 @@ var app = {
       }
       document.getElementById('faceFrame').innerHTML = htmlText;
 
+    }, function(result){
+      console.log('start camera error:' +result);
     });
+    app.changeTakePicture(true);
+  },
+
+  changeTakePicture: function(change=true){
+    if(change){
+      document.getElementById('startCameraButton').removeEventListener('click', this.startCamera, false);
+      document.getElementById('startCameraButton').addEventListener('click', this.takePicture, false);
+    }else{
+      document.getElementById('startCameraButton').removeEventListener('click', this.takePicture, false);
+      document.getElementById('startCameraButton').addEventListener('click', this.startCamera, false);
+    }
   },
 
   takePicture: function(){
@@ -54,23 +72,39 @@ var app = {
       height: 480,
       quality: 85,
     };
-    window.faceDetection.takePicture(options, function(imgData){
-      //console.log('takePicture callback' +JSON.stringify(imgData));
-      document.getElementById('originalPicture').style.backgroundColor = 'white';
-      document.getElementById('originalPicture').style.backgroundImage = 'url(data:image/jpeg;base64,' + imgData + ')';
-      window.faceDetection.stop();
 
+    window.faceDetection.takePicture(options, function(imageData){
+      console.log('takePicture callback' +JSON.stringify(imageData));
+      document.getElementById('originalPicture').style.backgroundColor = 'white';
+      document.getElementById('originalPicture').style.backgroundImage = 'url(data:image/jpeg;base64,' + imageData + ')';
+      app.stopCamera(true);
+    });
+  },
+
+  stopCamera: function(flag=null){
+    console.log('stopCamera:' + typeof flag);
+    if('boolean' != typeof flag){
+      document.getElementById('originalPicture').style.backgroundColor = 'gray';
+      document.getElementById('originalPicture').style.backgroundImage = '';
+    }
+
+    window.faceDetection.stop();
+    setTimeout(function(){
       document.getElementById('imageFrameTitle').innerHTML = '';
       document.getElementById('faceFrameTitle').innerHTML = '';
 
       document.getElementById('imageFrame').innerHTML = '';
       document.getElementById('faceFrame').innerHTML = '';
-    });
+
+      document.getElementById('startCameraButton').innerText = 'START';
+    }, 500);
+
+    app.changeTakePicture(false);
   },
 
   init: function(){
     document.getElementById('startCameraButton').addEventListener('click', this.startCamera, false);
-    document.getElementById('takePictureButton').addEventListener('click', this.takePicture, false);
+    document.getElementById('stopCameraButton').addEventListener('click', this.stopCamera, false);
   }
 };
 
