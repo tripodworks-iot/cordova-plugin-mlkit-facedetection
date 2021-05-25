@@ -9,7 +9,7 @@ This is a sample cordova application for <a href="https://github.com/tripodworks
 - Cordova v9.0.0 or later
 - JDK v1.8.0.221
 
-## Debug startE
+## Debug start
 ```
 $ cordova platform add android
 $ cordova run android
@@ -26,6 +26,3 @@ $ cordova platform add android
 $ cordova run android
 ```
 
-## IOS Quirks
-
-It is not possible to use your computers webcam during testing in the simulator, you must device test
