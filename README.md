@@ -49,7 +49,7 @@ All options stated are optional and will default to values here.
 
 | Item | Type | Note |
 | --- | --- | --- |
-| type | string | Type of live frame information(image/face) |
+| type | string | Type of live frame information (image/face) |
 | data | Json/List  | if result.type is 'image', data type is Json, otherwise，data type is List |
 
 <br>
@@ -68,10 +68,10 @@ If result.type is 'face', data type is List. The type of the list element is Jso
 
 | Item | Type | Note |
 | --- | --- | --- |
-| id | int | the tracking ID if the tracking is enabled.  Only the start option faceTrack is true  |
-| smiling | float | The probability that the face is smiling(0~1). Only the start option classification is true  |
-| leftEyeOpen | float | The probability that the face's left eye is open(0~1). Only the start option classification is true  |
-| rightEyeOpen | float | The probability that the face's right eye is open(0~1). Only the start option classification is true  |
+| id | int | the tracking ID if the tracking is enabled.  Only when start option faceTrack is true  |
+| smiling | float | The probability that the face is smiling(0~1). Only when start option classification is true  |
+| leftEyeOpen | float | The probability that the face's left eye is open(0~1). Only when start option classification is true  |
+| rightEyeOpen | float | The probability that the face's right eye is open(0~1). Only when start option classification is true  |
 | eulerX | float | Rotation of the face about the horizontal axis of the image  |
 | eulerY | float | Rotation of the face about the vertical axis of the image  |
 | eulerZ | float | Rotation of the face about the axis pointing out of the image  |
