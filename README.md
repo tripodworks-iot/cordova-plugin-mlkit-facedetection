@@ -18,8 +18,18 @@ Preferences
 
 ## Installation
 
+Use any one of the installation methods listed below depending on which framework you use.
+
+To install the master version with latest fixes and features
+
 ```
-$ cordova plugin add https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection
+$ cordova plugin add https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection.git
+$ ionic cordova plugin add https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection.git
+```
+or if you want to use the last released version on npm
+```
+$ cordova plugin add cordova-plugin-mlkit-facedetection
+$ ionic cordova plugin add cordova-plugin-mlkit-facedetection
 ```
 
 ## Methods
