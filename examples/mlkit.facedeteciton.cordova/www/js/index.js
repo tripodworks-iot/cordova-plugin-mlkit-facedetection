@@ -17,8 +17,8 @@ var app = {
       minFaceSize: 0.5,
       landmark:true,
       classification:true,
-      contour: false,
-      faceTrack:true,
+      contour: true,
+      faceTrack:false,
     };
 
     const me = this;
