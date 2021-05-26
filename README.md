@@ -8,18 +8,13 @@ Preferences
 **Currently available for Android only. Will support iOS in the future.<br> This plugin is under constant development. Releases are being kept up to date when appropriate.**
 
 ## Requirements
-<ul>
-  <li>Cordova 9.0.0 or higher</li>
-  <li>Android Cordova library 8.0.0 or higher</li>
-</ul>
+- Cordova 9.0.0 or higher
+- Android Cordova library 8.0.0 or higher
 
 ## Features
-
-<ul>
-  <li>Start the camera preview for face detection from HTML code</li>
-  <li>Stop the camera preview</li>
-  <li>Take Photos</li>
-</ul>
+- Start the camera preview for face detection from HTML code
+- Stop the camera preview
+- Take Photos
 
 ## Installation
 
