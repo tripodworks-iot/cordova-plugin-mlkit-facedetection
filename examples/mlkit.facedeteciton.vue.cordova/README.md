@@ -1,23 +1,25 @@
 # mlkit-facedetection-cordova
+cordova-plugin-mlkit-facedetection Sample Cordova App for vue
 
-## Project setup
-```
-npm install
-```
+This is a sample cordova application for <a href="https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection">cordova-plugin-mlkit-facedetection</a>
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Environment
 
-### Compiles and minifies for production
-```
-npm run build
-```
+- Node.js v12.4.x or or higher
+- npm v6.13.x or or higher
+- Cordova v9.0.0 or or higher
+- JDK v1.8.0.221
 
-### Lints and fixes files
+## Debug start
 ```
-npm run lint
+$ cd /path/cordova-plugin-mlkit-facedetection/
+$ cd ./examples/mlkit.facedeteciton.vue.cordova
+$ npm install
+$ cd ./src-cordova
+$ npm install
+$ cordova platform add android
+$ cd ..
+$ npm run cordova-serve-android
 ```
 
 ### Customize configuration
