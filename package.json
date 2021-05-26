@@ -1,11 +1,34 @@
 {
   "name": "cordova-plugin-mlkit-facedetection",
-  "version": "0.0.1",
-  "description": "",
-  "cordova": {
-    "id": "cordova-plugin-mlkit-facedetection",
-    "platforms": [
-      "android"
-    ]
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection.git"
+  },
+  "version": "0.1.0",
+  "description": "Cordova plugin that allows camera interaction from HTML code for face detection preview below or on top of the HTML.",
+  "license": "Apache 2.0",
+
+  "author": {
+    "name": "tripodw",
+    "email": "rai.gyoume@tripodw.com"
+  },
+
+  "bugs": {
+    "url": "https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection/issues"
+  },
+
+  "homepage": "https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection.git",
+  "keywords": [
+    "cordova",
+    "phonegap",
+    "ecosystem:cordova",
+    "cordova-android",
+    "android",
+    "ionic",
+    "camera",
+    "cam",
+    "face detection",
+    "camera-preview",
+    "preview"
+  ]
 }

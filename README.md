@@ -1,6 +1,6 @@
 # cordova plugin for mlkit face detection
-<a href="https://badge.fury.io/js/cordova-plugin-camera-preview" target="_blank"><img height="21" style='border:0px;height:21px;' border='0' src="https://badge.fury.io/js/cordova-plugin-camera-preview.svg" alt="NPM Version"></a>
-<a href='https://www.npmjs.org/package/cordova-plugin-camera-preview' target='_blank'><img height='21' style='border:0px;height:21px;' src='https://img.shields.io/npm/dt/cordova-plugin-camera-preview.svg?label=NPM+Downloads' border='0' alt='NPM Downloads' /></a>
+<a href="https://badge.fury.io/js/cordova-plugin-mlkit-facedetection" target="_blank"><img height="21" style='border:0px;height:21px;' border='0' src="https://badge.fury.io/js/cordova-plugin-mlkit-facedetection.svg" alt="NPM Version"></a>
+<a href='https://www.npmjs.org/package/cordova-plugin-mlkit-facedetection' target='_blank'><img height='21' style='border:0px;height:21px;' src='https://img.shields.io/npm/dt/cordova-plugin-mlkit-facedetection.svg?label=NPM+Downloads' border='0' alt='NPM Downloads' /></a>
 
 Cordova plugin that allows face detection from Javascript and HTML
 Preferences
@@ -30,12 +30,12 @@ $ cordova plugin add https://github.com/tripodworks-iot/cordova-plugin-mlkit-fac
 ## Methods
 
 ### start(options, [successCallback, errorCallback])
-Starts the camera preview instance.
+Start the camera preview instance for face detection.
 
 <strong>Options: </strong>
 All options stated are optional and will default to values here.
 
-| item | Type | Default | Note |
+| Item | Type | Default | Note |
 | --- | --- | --- | --- |
 | x | int | 0 | start x position for camera  |
 | y | int | 0 | start y position for camera |
@@ -52,15 +52,15 @@ All options stated are optional and will default to values here.
 <br>
 <strong>successCallback(result): </strong>Result will default to values here.
 
-| item | Type | Default | Note |
+| Item | Type | Default | Note |
 | --- | --- | --- | --- |
 | type | string | image/face | Type of live frame information |
 | data | Json/List  |  | if result.type is 'image', data type is Json, otherwise，data type is List |
 
 <br>
-If result.type is 'image', data type is Json, values is follow.
+If result.type is 'image', data type is Json, values as follows.
 
-| item | Type | Default | Note |
+| Item | Type | Default | Note |
 | --- | --- | --- | --- |
 | imageSize | string | '480x640' | Input Picture pixel  |
 | framesPerSecond | int | 0 | Image frames Per Second  |
@@ -69,9 +69,9 @@ If result.type is 'image', data type is Json, values is follow.
 
 <br>
 
-If result.type is 'face', data type is List, list item type is Json, json values is follow.
+If result.type is 'face', data type is List. The type of the list element is Json, element values as follow.
 
-| item | Type | Default | Note |
+| Item | Type | Default | Note |
 | --- | --- | --- | --- |
 | id | int | 0 | the tracking ID if the tracking is enabled.  Only the start option faceTrack is true  |
 | smiling | float | 0 | The probability that the face is smiling(0~1). Only the start option classification is true  |
@@ -126,7 +126,7 @@ Take the picture. It will choose a supported photo size that is closest to width
 <strong>Options:</strong>
 All options stated are optional and will default to values here.
 
-| item | Type | Default | Note |
+| Item | Type | Default | Note |
 | --- | --- | --- | --- |
 | width | int | 480 | Taken image width. If width are not specified or are 0 it will use the defaults |
 | height | int | 640 | Taken Image height. If height are not specified or are 0 it will use the defaults |
