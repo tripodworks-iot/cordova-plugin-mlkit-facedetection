@@ -34,8 +34,8 @@ All options stated are optional and will default to values here.
 | --- | --- | --- | --- |
 | x | int | 0 | start x position for camera  |
 | y | int | 0 | start y position for camera |
-| width | int | 0 | Defaults to window.screen.width |
-| height | int | 0 | Defaults to window.screen.height |
+| width | int | 0 | Camera screen width |
+| height | int | 0 | Camera screen height |
 | front | boolean | true | Defaults to front camera |
 | cameraPixel | string | '480x640' | Picture pixel |
 | minFaceSize | float | 0.1 | Recognize the proportion of the face |
@@ -47,34 +47,34 @@ All options stated are optional and will default to values here.
 <br>
 <strong>successCallback(result): </strong>Result will default to values here.
 
-| Item | Type | Default | Note |
-| --- | --- | --- | --- |
-| type | string | image/face | Type of live frame information |
-| data | Json/List  |  | if result.type is 'image', data type is Json, otherwise，data type is List |
+| Item | Type | Note |
+| --- | --- | --- |
+| type | string | Type of live frame information(image/face) |
+| data | Json/List  | if result.type is 'image', data type is Json, otherwise，data type is List |
 
 <br>
 If result.type is 'image', data type is Json, values as follows.
 
-| Item | Type | Default | Note |
-| --- | --- | --- | --- |
-| imageSize | string | '480x640' | Input Picture pixel  |
-| framesPerSecond | int | 0 | Image frames Per Second  |
-| frameLatency | int | 0 | Image frames Latency(ms)  |
-| detectorLatency | int | 0 | Image detector Latency(ms)  |
+| Item | Type | Note |
+| --- | --- | --- |
+| imageSize | string | Input Picture pixel  |
+| framesPerSecond | int | Image frames Per Second  |
+| frameLatency | int | Image frames Latency(ms)  |
+| detectorLatency | int | Image detector Latency(ms)  |
 
 <br>
 
 If result.type is 'face', data type is List. The type of the list element is Json, element values as follow.
 
-| Item | Type | Default | Note |
-| --- | --- | --- | --- |
-| id | int | 0 | the tracking ID if the tracking is enabled.  Only the start option faceTrack is true  |
-| smiling | float | 0 | The probability that the face is smiling(0~1). Only the start option classification is true  |
-| leftEyeOpen | float | 0 | The probability that the face's left eye is open(0~1). Only the start option classification is true  |
-| rightEyeOpen | float | 0 | The probability that the face's right eye is open(0~1). Only the start option classification is true  |
-| eulerX | float | 0 | Rotation of the face about the horizontal axis of the image  |
-| eulerY | float | 0 | Rotation of the face about the vertical axis of the image  |
-| eulerZ | float | 0 | Rotation of the face about the axis pointing out of the image  |
+| Item | Type | Note |
+| --- | --- | --- |
+| id | int | the tracking ID if the tracking is enabled.  Only the start option faceTrack is true  |
+| smiling | float | The probability that the face is smiling(0~1). Only the start option classification is true  |
+| leftEyeOpen | float | The probability that the face's left eye is open(0~1). Only the start option classification is true  |
+| rightEyeOpen | float | The probability that the face's right eye is open(0~1). Only the start option classification is true  |
+| eulerX | float | Rotation of the face about the horizontal axis of the image  |
+| eulerY | float | Rotation of the face about the vertical axis of the image  |
+| eulerZ | float | Rotation of the face about the axis pointing out of the image  |
 
 <br>
 
