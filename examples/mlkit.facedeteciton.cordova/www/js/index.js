@@ -17,8 +17,8 @@ var app = {
       minFaceSize: 0.5,
       landmark:true,
       classification:true,
-      contour: true,
-      faceTrack:false,
+      contour: false,
+      faceTrack:true,
     };
 
     const me = this;
@@ -43,9 +43,18 @@ var app = {
         //console.log('face=' + JSON.stringify(data[i]));
         document.getElementById('faceFrameTitle').innerHTML = 'Detected faces information';
 
-        htmlText += '<li>id:'+ data[i].id + ' , smiling:' + data[i].smiling +' </li>';
-        htmlText += '<li>[EyeOpen]left: ' + data[i].leftEyeOpen +', right: ' + data[i].rightEyeOpen +'</li>';
-        htmlText += '<li>[euler]X: ' + data[i].eulerX + ', Y: ' + data[i].eulerY + ', Z: ' + data[i].eulerZ +'</li>';
+        const smiling = Number.parseFloat(data[i].smiling).toFixed(2);
+        const leftEyeOpen = Number.parseFloat(data[i].leftEyeOpen).toFixed(2);
+        const rightEyeOpen = Number.parseFloat(data[i].rightEyeOpen).toFixed(2);
+
+        const eulerX = Number.parseFloat(data[i].eulerX).toFixed(2);
+        const eulerY = Number.parseFloat(data[i].eulerY).toFixed(2);
+        const eulerZ = Number.parseFloat(data[i].eulerZ).toFixed(2);
+
+        htmlText += '<li>id: '+ data[i].id + ' </li>';
+        htmlText += '<li>smiling: ' + smiling +' </li>';
+        htmlText += '<li>[EyeOpen]left/right: ' + leftEyeOpen +' / ' + rightEyeOpen +'</li>';
+        htmlText += '<li>[euler]X/Y/Z: ' + eulerX + ' / ' + eulerY + ' / ' + eulerZ +'</li>';
         htmlText += '<br>';
       }
       document.getElementById('faceFrame').innerHTML = htmlText;

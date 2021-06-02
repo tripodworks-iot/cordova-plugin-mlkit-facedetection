@@ -21,6 +21,7 @@
     <preference name="AndroidXEnabled" value="true" />
     <platform name="android">
         <allow-intent href="market:*" />
+        <preference name="android-minSdkVersion" value="22" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

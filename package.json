@@ -4,7 +4,7 @@
     "type": "git",
     "url": "git+https://github.com/tripodworks-iot/cordova-plugin-mlkit-facedetection.git"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cordova plugin that allows camera interaction from HTML code for face detection preview below or on top of the HTML.",
   "license": "Apache 2.0",
 

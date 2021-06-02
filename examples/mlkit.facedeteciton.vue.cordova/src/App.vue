@@ -36,9 +36,11 @@
         <!--eslint-disable-next-line-->
         <div v-for="(face, index) in faceList">
           <div style="padding-left:10px;" :key="index">
-              <li>id: {{face.id}}, smiling: {{face.smiling}}</li>
-              <li>leftEyeOpen: {{face.leftEyeOpen}}, rightEyeOpen: {{face.rightEyeOpen}}</li>
-              <li>eulerX: {{face.eulerX}}, eulerY: {{face.eulerY}}, eulerZ: {{face.eulerZ}}</li>
+              <li>id: {{face.id}}</li>
+              <li>smiling: {{Number.parseFloat(face.smiling).toFixed(2)}}</li>
+              <li>leftEyeOpen: {{Number.parseFloat(face.leftEyeOpen).toFixed(2)}}</li>
+              <li>rightEyeOpen: {{Number.parseFloat(face.rightEyeOpen).toFixed(2)}}</li>
+              <li>eulerX/Y/Z: {{Number.parseFloat(face.eulerX).toFixed(2)}} / {{Number.parseFloat(face.eulerY).toFixed(2)}} / {{Number.parseFloat(face.eulerZ).toFixed(2)}}</li>
           </div>
         </div>
 
