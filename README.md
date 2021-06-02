@@ -66,8 +66,8 @@ All options stated are optional and will default to values here.
 | minFaceSize | float | 0.1 | Recognize the proportion of the face |
 | landmark | boolean | true | Whether to attempt to identify facial "landmarks": eyes, ears, nose, cheeks, mouth, and so on |
 | classification | boolean | true | Whether or not to classify faces into categories such as "smiling", and "eyes open" |
-| faceTrack | boolean | false | Whether or not to assign faces an ID, which can be used to track faces across images |
-| contour | boolean | false | Whether to detect the contours of facial features. Contours are detected for only the most prominent face in an image |
+| faceTrack | boolean | false | Whether or not to assign faces an ID, which can be used to track faces across images <br>Note that when contour detection is enabled, only one face is detected, so face tracking doesn't produce useful results. For this reason, and to improve detection speed, don't enable both contour detection and face tracking. |
+| contour | boolean | false | Whether to detect the contours of facial features. Contours are detected for only the most prominent face in an image. <br>Note that when face contour detection or classification and landmark detection, but not both |
 
 <br>
 <strong>successCallback(result): </strong>Result will default to values here.
