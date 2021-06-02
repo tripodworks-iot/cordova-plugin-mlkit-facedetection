@@ -57,25 +57,25 @@ All options stated are optional and will default to values here.
 
 | Item | Type | Default | Note |
 | --- | --- | --- | --- |
-| x | int | 0 | start x position for camera  |
-| y | int | 0 | start y position for camera |
-| width | int | 0 | Camera screen width |
-| height | int | 0 | Camera screen height |
-| front | boolean | true | Defaults to front camera |
+| x | int | 0 | start x position for camera. |
+| y | int | 0 | start y position for camera. |
+| width | int | 0 | Camera screen width. |
+| height | int | 0 | Camera screen height. |
+| front | boolean | true | Defaults to front camera. |
 | cameraPixel | string | '480x640' | Picture pixel |
-| minFaceSize | float | 0.1 | Recognize the proportion of the face |
-| landmark | boolean | true | Whether to attempt to identify facial "landmarks": eyes, ears, nose, cheeks, mouth, and so on |
-| classification | boolean | true | Whether or not to classify faces into categories such as "smiling", and "eyes open" |
-| faceTrack | boolean | false | Whether or not to assign faces an ID, which can be used to track faces across images <br>Note that when contour detection is enabled, only one face is detected, so face tracking doesn't produce useful results. For this reason, and to improve detection speed, don't enable both contour detection and face tracking. |
-| contour | boolean | false | Whether to detect the contours of facial features. Contours are detected for only the most prominent face in an image. <br>Note that when face contour detection or classification and landmark detection, but not both |
+| minFaceSize | float | 0.1 | Recognize the proportion of the face. |
+| landmark | boolean | true | Whether to attempt to identify facial "landmarks": eyes, ears, nose, cheeks, mouth, and so on. |
+| classification | boolean | true | Whether or not to classify faces into categories such as "smiling", and "eyes open". |
+| faceTrack | boolean | false | Whether or not to assign faces an ID, which can be used to track faces across images. <br>Note that when contour detection is enabled, only one face is detected, so face tracking doesn't produce useful results. For this reason, and to improve detection speed, don't enable both contour detection and face tracking. |
+| contour | boolean | false | Whether to detect the contours of facial features. Contours are detected for only the most prominent face in an image. <br>Note that when face contour detection or classification and landmark detection, but not both. |
 
 <br>
 <strong>successCallback(result): </strong>Result will default to values here.
 
 | Item | Type | Note |
 | --- | --- | --- |
-| type | string | Type of live frame information (image/face) |
-| data | Json/List  | if result.type is 'image', data type is Json, otherwise，data type is List |
+| type | string | Type of live frame information (image/face). |
+| data | Json/List  | if result.type is 'image', data type is Json, otherwise，data type is List. |
 
 <br>
 If result.type is 'image', data type is Json, values as follows.
@@ -83,9 +83,9 @@ If result.type is 'image', data type is Json, values as follows.
 | Item | Type | Note |
 | --- | --- | --- |
 | imageSize | string | Input Picture pixel  |
-| framesPerSecond | int | Image frames Per Second  |
-| frameLatency | int | Image frames Latency(ms)  |
-| detectorLatency | int | Image detector Latency(ms)  |
+| framesPerSecond | int | Image frames Per Second.  |
+| frameLatency | int | Image frames Latency(ms).  |
+| detectorLatency | int | Image detector Latency(ms).  |
 
 <br>
 
@@ -93,13 +93,13 @@ If result.type is 'face', data type is List. The type of the list element is Jso
 
 | Item | Type | Note |
 | --- | --- | --- |
-| id | int | the tracking ID if the tracking is enabled.  Only when start option faceTrack is true  |
-| smiling | float | The probability that the face is smiling(0~1). Only when start option classification is true  |
-| leftEyeOpen | float | The probability that the face's left eye is open(0~1). Only when start option classification is true  |
-| rightEyeOpen | float | The probability that the face's right eye is open(0~1). Only when start option classification is true  |
-| eulerX | float | Rotation of the face about the horizontal axis of the image  |
-| eulerY | float | Rotation of the face about the vertical axis of the image  |
-| eulerZ | float | Rotation of the face about the axis pointing out of the image  |
+| id | int | the tracking ID if the tracking is enabled.  Only when start option faceTrack is true.  |
+| smiling | float | The probability that the face is smiling(0~1). Only when start option classification is true.  |
+| leftEyeOpen | float | The probability that the face's left eye is open(0~1). Only when start option classification is true.  |
+| rightEyeOpen | float | The probability that the face's right eye is open(0~1). Only when start option classification is true.  |
+| eulerX | float | Rotation of the face about the horizontal axis of the image.  |
+| eulerY | float | Rotation of the face about the vertical axis of the image.  |
+| eulerZ | float | Rotation of the face about the axis pointing out of the image.  |
 
 <br>
 
@@ -148,9 +148,9 @@ All options stated are optional and will default to values here.
 
 | Item | Type | Default | Note |
 | --- | --- | --- | --- |
-| width | int | 480 | Taken image width. If width are not specified or are 0 it will use the defaults |
-| height | int | 640 | Taken Image height. If height are not specified or are 0 it will use the defaults |
-| quality | int | 85 | Specifies the quality/compression value: 0=min compression, 100=max quality
+| width | int | 480 | Taken image width. If width are not specified or are 0 it will use the defaults. |
+| height | int | 640 | Taken Image height. If height are not specified or are 0 it will use the defaults. |
+| quality | int | 85 | Specifies the quality/compression value: 0=min compression, 100=max quality.
 
 ```
   let options = {
