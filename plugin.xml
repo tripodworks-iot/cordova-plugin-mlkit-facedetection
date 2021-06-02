@@ -80,11 +80,13 @@
   </platform>
 
   <platform name="ios">
-    <config-file parent="/*" target="config.xml">
+    <config-file target="config.xml" parent="/*" >
       <feature name="faceDetection">
-        <param name="ios-package" value="faceDetection" />
+        <param name="ios-package" value="faceDetection" onload="true"/>
       </feature>
     </config-file>
+
+    <header-file src="src/ios/faceDetection.h" />
     <source-file src="src/ios/faceDetection.m" />
   </platform>
 </plugin>

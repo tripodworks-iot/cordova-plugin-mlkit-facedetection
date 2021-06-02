@@ -13,22 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #import <Cordova/CDV.h>
-
-@interface faceDetection : CDVPlugin {
-  // Member variables go here.
-}
-
-- (void)start:(CDVInvokedUrlCommand*)command;
-@end
+#import <Cordova/CDVPlugin.h>
+#import <Cordova/CDVInvokedUrlCommand.h>
+#import <GLKit/GLKit.h>
+#import "faceDetection.h"
 
 @implementation faceDetection
 
-- (void)start:(CDVInvokedUrlCommand*)command
-{
+-(void) pluginInitialize{
+  // start as transparent
+  self.webView.opaque = NO;
+  self.webView.backgroundColor = [UIColor clearColor];
+}
+
+- (void)start:(CDVInvokedUrlCommand*)command {
+    NSLog(@"start call");
     CDVPluginResult* pluginResult = nil;
-    NSString* echo = [command.arguments objectAtIndex:0];
+
+    if (self.sessionManager != nil) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Camera already started!"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        return;
+    }
+
+    NSData * data = [command.arguments objectAtIndex:0];
+    NSError *error = nil;
+    NSDictionary object = [NSJSONSerialization
+                      JSONObjectWithData:data
+                      options:0
+                      error:&error];
+
+
+
 
     if (echo != nil && [echo length] > 0) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
@@ -38,5 +55,26 @@
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
+
+- (void) stop:(CDVInvokedUrlCommand*)command {
+    NSLog(@"stop call");
+    CDVPluginResult *pluginResult;
+
+    if(self.sessionManager != nil) {
+        [self.cameraRenderController.view removeFromSuperview];
+        [self.cameraRenderController removeFromParentViewController];
+
+        self.cameraRenderController = nil;
+        self.sessionManager = nil;
+
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    }
+    else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Camera not started"];
+    }
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 
 @end
