@@ -41,6 +41,7 @@
               <li>leftEyeOpen: {{Number.parseFloat(face.leftEyeOpen).toFixed(2)}}</li>
               <li>rightEyeOpen: {{Number.parseFloat(face.rightEyeOpen).toFixed(2)}}</li>
               <li>eulerX/Y/Z: {{Number.parseFloat(face.eulerX).toFixed(2)}} / {{Number.parseFloat(face.eulerY).toFixed(2)}} / {{Number.parseFloat(face.eulerZ).toFixed(2)}}</li>
+              <li>[Contour]points: {{JSON.stringify(face.points)}}</li>
           </div>
         </div>
 

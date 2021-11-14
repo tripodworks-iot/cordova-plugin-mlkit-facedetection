@@ -17,8 +17,8 @@ var app = {
       minFaceSize: 0.5,
       landmark:true,
       classification:true,
-      contour: false,
-      faceTrack:true,
+      contour: true,
+      faceTrack:false,
     };
 
     const me = this;
@@ -51,10 +51,11 @@ var app = {
         const eulerY = Number.parseFloat(data[i].eulerY).toFixed(2);
         const eulerZ = Number.parseFloat(data[i].eulerZ).toFixed(2);
 
-        htmlText += '<li>id: '+ data[i].id + ' </li>';
-        htmlText += '<li>smiling: ' + smiling +' </li>';
+        htmlText += '<li>Id: '+ data[i].id + ' </li>';
+        htmlText += '<li>Smiling: ' + smiling +' </li>';
         htmlText += '<li>[EyeOpen]left/right: ' + leftEyeOpen +' / ' + rightEyeOpen +'</li>';
-        htmlText += '<li>[euler]X/Y/Z: ' + eulerX + ' / ' + eulerY + ' / ' + eulerZ +'</li>';
+        htmlText += '<li>[Euler]X/Y/Z: ' + eulerX + ' / ' + eulerY + ' / ' + eulerZ +'</li>';
+        htmlText += '<li>[Contour]points:' + JSON.stringify(data[i].points) +'</li>';
         htmlText += '<br>';
       }
       document.getElementById('faceFrame').innerHTML = htmlText;
@@ -65,7 +66,7 @@ var app = {
     app.changeTakePicture(true);
   },
 
-  changeTakePicture: function(change=true){
+  changeTakePicture: function(change = true){
     if(change){
       document.getElementById('startCameraButton').removeEventListener('click', this.startCamera, false);
       document.getElementById('startCameraButton').addEventListener('click', this.takePicture, false);

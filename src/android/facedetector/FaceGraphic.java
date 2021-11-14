@@ -20,12 +20,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceContour;
 import com.google.mlkit.vision.face.FaceLandmark;
 import com.google.mlkit.vision.face.FaceLandmark.LandmarkType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -64,6 +67,7 @@ public class FaceGraphic extends Graphic {
     private final Paint[] labelPaints;
 
     private volatile Face face;
+    private static final String TAG = "FaceGraphic";
 
     FaceGraphic(GraphicOverlay overlay, Face face) {
         super(overlay);
@@ -110,6 +114,7 @@ public class FaceGraphic extends Graphic {
         float x = translateX(face.getBoundingBox().centerX());
         float y = translateY(face.getBoundingBox().centerY());
         canvas.drawCircle(x, y, FACE_POSITION_RADIUS, facePositionPaint);
+        Log.v(TAG, "face main point: x=" + x + " / y=" + y);
 
         // Calculate positions.
         float left = x - scale(face.getBoundingBox().width() / 2.0f);
@@ -186,6 +191,7 @@ public class FaceGraphic extends Graphic {
             for (PointF point : contour.getPoints()) {
                 canvas.drawCircle(
                         translateX(point.x), translateY(point.y), FACE_POSITION_RADIUS, facePositionPaint);
+                Log.v(TAG, "face contour point: x=" + translateX(point.x) + " / y=" + translateY(point.y));
             }
         }
 
@@ -293,6 +299,27 @@ public class FaceGraphic extends Graphic {
         FaceFrame.put("eulerX", face.getHeadEulerAngleX());
         FaceFrame.put("eulerY", face.getHeadEulerAngleY());
         FaceFrame.put("eulerZ", face.getHeadEulerAngleZ());
+
+        List<Map<String, Object>> pointList = new ArrayList<>();
+        Map<String, Object> mainPoint = new HashMap<>();
+        int x = (int)translateX(face.getBoundingBox().centerX());
+        int y = (int)translateY(face.getBoundingBox().centerY());
+        mainPoint.put("x", x);
+        mainPoint.put("y", y);
+        pointList.add(mainPoint);
+
+        for (FaceContour contour : face.getAllContours()) {
+            for (PointF point : contour.getPoints()) {
+                Map<String, Object> facePoint = new HashMap<>();
+                x = (int)translateX(point.x);
+                y = (int)translateY(point.y);
+                facePoint.put("x", x);
+                facePoint.put("y", y);
+                pointList.add(facePoint);
+            }
+        }
+        Log.v(TAG, "face contour contourPoint size=" + pointList.size());
+        FaceFrame.put("points", pointList);
     }
 
     @Override

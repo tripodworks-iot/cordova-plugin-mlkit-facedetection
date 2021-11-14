@@ -100,6 +100,7 @@ If result.type is 'face', data type is List. The type of the list element is Jso
 | eulerX | float | Rotation of the face about the horizontal axis of the image  |
 | eulerY | float | Rotation of the face about the vertical axis of the image  |
 | eulerZ | float | Rotation of the face about the axis pointing out of the image  |
+| points | list | Contour point list, Each point is coordinate.(x:10, y:20)   |
 
 <br>
 
