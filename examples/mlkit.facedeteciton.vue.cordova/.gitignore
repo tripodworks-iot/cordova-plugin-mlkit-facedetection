@@ -23,6 +23,7 @@ pnpm-debug.log*
 *.sw?
 
 # Cordova
+/src-cordova/node_modules
 /src-cordova/platforms
 /src-cordova/plugins
 /public/cordova.js

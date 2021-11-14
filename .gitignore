@@ -22,13 +22,3 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
-
-# Cordova sample app
-/examples/mlkit.facedeteciton.vue.cordova/node_modules
-/examples/mlkit.facedeteciton.vue.cordova/src-cordova/node_modules
-/examples/mlkit.facedeteciton.vue.cordova/src-cordova/platforms
-/examples/mlkit.facedeteciton.vue.cordova/src-cordova/plugins
-
-# Cordova sample app (build config file)
-/examples/mlkit.facedeteciton.vue.cordova/src-cordova/*.keystore
-/examples/mlkit.facedeteciton.vue.cordova/src-cordova/build*
