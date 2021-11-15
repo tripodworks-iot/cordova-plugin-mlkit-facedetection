@@ -301,20 +301,11 @@ public class FaceGraphic extends Graphic {
         FaceFrame.put("eulerZ", face.getHeadEulerAngleZ());
 
         List<Map<String, Object>> pointList = new ArrayList<>();
-        Map<String, Object> mainPoint = new HashMap<>();
-        int x = (int)translateX(face.getBoundingBox().centerX());
-        int y = (int)translateY(face.getBoundingBox().centerY());
-        mainPoint.put("x", x);
-        mainPoint.put("y", y);
-        pointList.add(mainPoint);
-
         for (FaceContour contour : face.getAllContours()) {
             for (PointF point : contour.getPoints()) {
                 Map<String, Object> facePoint = new HashMap<>();
-                x = (int)translateX(point.x);
-                y = (int)translateY(point.y);
-                facePoint.put("x", x);
-                facePoint.put("y", y);
+                facePoint.put("x", translateX(point.x));
+                facePoint.put("y", translateY(point.y));
                 pointList.add(facePoint);
             }
         }
